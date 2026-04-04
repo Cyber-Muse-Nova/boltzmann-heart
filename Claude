@@ -1,0 +1,648 @@
+import { useState, useEffect, useRef, useCallback } from “react”;
+
+const COLORS = {
+bg: “#0a0515”,
+card: “rgba(120, 50, 180, 0.08)”,
+cardBorder: “rgba(180, 100, 255, 0.25)”,
+accent1: “#c060ff”,
+accent2: “#60d0ff”,
+accent3: “#ff70b8”,
+rose: “#ff8ec4”,
+gold: “#ffd0a0”,
+text: “#e8d8f8”,
+textDim: “rgba(200, 180, 220, 0.6)”,
+glow1: “rgba(180, 80, 255, 0.3)”,
+glow2: “rgba(80, 200, 255, 0.3)”,
+};
+
+/* ─── Background Stars ─── */
+function StarField({ canvasRef }) {
+useEffect(() => {
+const c = canvasRef.current;
+if (!c) return;
+const ctx = c.getContext(“2d”);
+let w, h, stars = [], raf;
+const resize = () => { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; };
+resize();
+window.addEventListener(“resize”, resize);
+for (let i = 0; i < 200; i++) stars.push({ x: Math.random() * 2000, y: Math.random() * 2000, r: Math.random() * 1.5 + 0.3, s: Math.random() * 0.5 + 0.2, p: Math.random() * Math.PI * 2 });
+const draw = (t) => {
+ctx.clearRect(0, 0, w, h);
+stars.forEach(s => {
+const a = 0.3 + 0.7 * Math.sin(t * 0.001 * s.s + s.p);
+ctx.beginPath();
+ctx.arc(s.x % w, s.y % h, s.r, 0, Math.PI * 2);
+ctx.fillStyle = `rgba(200,180,255,${a})`;
+ctx.fill();
+});
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => { cancelAnimationFrame(raf); window.removeEventListener(“resize”, resize); };
+}, []);
+return null;
+}
+
+/* ─── Model: Solar System ─── */
+function SolarSystem({ width, height }) {
+const ref = useRef(null);
+const animRef = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+const cx = width / 2, cy = height / 2;
+const planets = [
+{ name: “Mercury”, r: 40, size: 3, color: “#c0b0a0”, speed: 4.15 },
+{ name: “Venus”, r: 65, size: 5, color: “#ffd080”, speed: 1.62 },
+{ name: “Earth”, r: 95, size: 5.5, color: “#60b0ff”, speed: 1 },
+{ name: “Mars”, r: 125, size: 4, color: “#ff7050”, speed: 0.53 },
+{ name: “Jupiter”, r: 170, size: 12, color: “#f0c080”, speed: 0.084 },
+{ name: “Saturn”, r: 215, size: 10, color: “#ffe0a0”, speed: 0.034, ring: true },
+{ name: “Uranus”, r: 252, size: 7, color: “#80e0e0”, speed: 0.012 },
+{ name: “Neptune”, r: 282, size: 6.5, color: “#5080ff”, speed: 0.006 },
+];
+const draw = (t) => {
+ctx.clearRect(0, 0, width, height);
+// orbits
+planets.forEach(p => {
+ctx.beginPath(); ctx.arc(cx, cy, p.r, 0, Math.PI * 2);
+ctx.strokeStyle = “rgba(150,100,220,0.15)”; ctx.lineWidth = 0.5; ctx.stroke();
+});
+// sun
+const sunGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 20);
+sunGrd.addColorStop(0, “#fff8e0”); sunGrd.addColorStop(0.5, “#ffd040”); sunGrd.addColorStop(1, “rgba(255,180,40,0)”);
+ctx.beginPath(); ctx.arc(cx, cy, 20, 0, Math.PI * 2); ctx.fillStyle = sunGrd; ctx.fill();
+ctx.beginPath(); ctx.arc(cx, cy, 8, 0, Math.PI * 2); ctx.fillStyle = “#fff”; ctx.fill();
+// planets
+planets.forEach(p => {
+const angle = t * 0.0005 * p.speed;
+const px = cx + Math.cos(angle) * p.r;
+const py = cy + Math.sin(angle) * p.r;
+if (p.ring) {
+ctx.beginPath(); ctx.ellipse(px, py, p.size * 2, p.size * 0.5, angle * 0.3, 0, Math.PI * 2);
+ctx.strokeStyle = “rgba(255,224,160,0.4)”; ctx.lineWidth = 2; ctx.stroke();
+}
+const grd = ctx.createRadialGradient(px, py, 0, px, py, p.size * 2);
+grd.addColorStop(0, p.color); grd.addColorStop(1, “rgba(0,0,0,0)”);
+ctx.beginPath(); ctx.arc(px, py, p.size * 2, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill();
+ctx.beginPath(); ctx.arc(px, py, p.size, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill();
+ctx.fillStyle = “rgba(200,180,240,0.5)”; ctx.font = “9px monospace”; ctx.textAlign = “center”;
+ctx.fillText(p.name, px, py + p.size + 12);
+});
+animRef.current = requestAnimationFrame(draw);
+};
+animRef.current = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(animRef.current);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+/* ─── Model: Lorenz Attractor ─── */
+function LorenzAttractor({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+let x = 0.1, y = 0, z = 0;
+const dt = 0.005, sigma = 10, rho = 28, beta = 8 / 3;
+const points = [];
+for (let i = 0; i < 8000; i++) {
+const dx = sigma * (y - x) * dt;
+const dy = (x * (rho - z) - y) * dt;
+const dz = (x * y - beta * z) * dt;
+x += dx; y += dy; z += dz;
+points.push({ x, y, z });
+}
+let idx = 0, raf;
+const draw = (t) => {
+ctx.fillStyle = “rgba(10,5,21,0.03)”;
+ctx.fillRect(0, 0, width, height);
+const rotY = t * 0.0002;
+const batch = 40;
+for (let b = 0; b < batch && idx < points.length; b++, idx++) {
+const p = points[idx];
+const rx = p.x * Math.cos(rotY) - p.z * Math.sin(rotY);
+const rz = p.x * Math.sin(rotY) + p.z * Math.cos(rotY);
+const sx = width / 2 + rx * 7;
+const sy = height / 2 - p.y * 7 + rz * 2;
+const hue = 270 + (idx / points.length) * 60;
+ctx.beginPath(); ctx.arc(sx, sy, 1, 0, Math.PI * 2);
+ctx.fillStyle = `hsla(${hue}, 80%, 65%, 0.8)`;
+ctx.fill();
+}
+if (idx >= points.length) idx = 0;
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(raf);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+/* ─── Model: Quantum Wave ─── */
+function QuantumWave({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+let raf;
+const draw = (t) => {
+ctx.clearRect(0, 0, width, height);
+const time = t * 0.002;
+// probability density - double slit
+for (let x = 0; x < width; x += 2) {
+for (let y = 0; y < height; y += 2) {
+const dx1 = x - width * 0.4, dy1 = y - height / 2 - 30;
+const dx2 = x - width * 0.4, dy2 = y - height / 2 + 30;
+const r1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+const r2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+const wave1 = Math.sin(r1 * 0.08 - time * 2) / (1 + r1 * 0.01);
+const wave2 = Math.sin(r2 * 0.08 - time * 2) / (1 + r2 * 0.01);
+const interference = (wave1 + wave2);
+const intensity = interference * interference;
+if (intensity > 0.02) {
+const alpha = Math.min(intensity * 1.5, 1);
+const hue = 280 + intensity * 50;
+ctx.fillStyle = `hsla(${hue}, 85%, 60%, ${alpha * 0.6})`;
+ctx.fillRect(x, y, 2, 2);
+}
+}
+}
+// slit barrier
+ctx.fillStyle = “rgba(100,60,160,0.6)”;
+ctx.fillRect(width * 0.4 - 2, 0, 4, height / 2 - 40);
+ctx.fillRect(width * 0.4 - 2, height / 2 - 20, 4, 40);
+ctx.fillRect(width * 0.4 - 2, height / 2 + 20, 4, height);
+// labels
+ctx.fillStyle = “rgba(200,180,240,0.5)”; ctx.font = “10px monospace”;
+ctx.fillText(“Double-Slit Interference”, 10, 20);
+ctx.fillText(“ψ = ψ₁ + ψ₂”, 10, 35);
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(raf);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+/* ─── Model: Earth + Satellites ─── */
+function EarthSatellite({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+const cx = width / 2, cy = height / 2, R = Math.min(width, height) * 0.22;
+const sats = Array.from({ length: 6 }, (_, i) => ({
+r: R + 30 + i * 22, speed: 0.5 + Math.random() * 1.5, phase: Math.random() * Math.PI * 2,
+tilt: (Math.random() - 0.5) * 0.6, color: `hsl(${260 + i * 15}, 80%, 70%)`
+}));
+let raf;
+const draw = (t) => {
+ctx.clearRect(0, 0, width, height);
+const time = t * 0.001;
+// earth glow
+const g1 = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * 2);
+g1.addColorStop(0, “rgba(60,140,255,0.15)”); g1.addColorStop(1, “rgba(0,0,0,0)”);
+ctx.beginPath(); ctx.arc(cx, cy, R * 2, 0, Math.PI * 2); ctx.fillStyle = g1; ctx.fill();
+// satellite orbits + satellites
+sats.forEach(s => {
+ctx.save(); ctx.translate(cx, cy); ctx.rotate(s.tilt);
+ctx.beginPath(); ctx.ellipse(0, 0, s.r, s.r * 0.85, 0, 0, Math.PI * 2);
+ctx.strokeStyle = “rgba(150,100,255,0.12)”; ctx.lineWidth = 0.5; ctx.stroke();
+const a = time * s.speed + s.phase;
+const sx = Math.cos(a) * s.r, sy = Math.sin(a) * s.r * 0.85;
+// trail
+for (let j = 1; j <= 15; j++) {
+const ta = a - j * 0.04;
+const tx = Math.cos(ta) * s.r, ty = Math.sin(ta) * s.r * 0.85;
+ctx.beginPath(); ctx.arc(tx, ty, 1, 0, Math.PI * 2);
+ctx.fillStyle = `rgba(150,100,255,${0.3 - j * 0.02})`; ctx.fill();
+}
+// satellite body
+ctx.beginPath(); ctx.arc(sx, sy, 3, 0, Math.PI * 2); ctx.fillStyle = s.color; ctx.fill();
+// solar panels
+ctx.fillStyle = `rgba(100,200,255,0.5)`;
+ctx.fillRect(sx - 8, sy - 1, 5, 2); ctx.fillRect(sx + 3, sy - 1, 5, 2);
+ctx.restore();
+});
+// earth
+const eg = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, R);
+eg.addColorStop(0, “#4090e0”); eg.addColorStop(0.5, “#2060b0”); eg.addColorStop(1, “#103060”);
+ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = eg; ctx.fill();
+// continents (simplified)
+ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+const shift = time * 8;
+[[cx - 20 + shift % 80 - 40, cy - 25, 25, 20], [cx + 10 + shift % 80 - 40, cy + 5, 18, 30],
+[cx - 50 + shift % 80 - 40, cy - 10, 12, 15], [cx + 40 + shift % 80 - 40, cy - 30, 20, 18]].forEach(([x, y, w, h]) => {
+ctx.beginPath(); ctx.ellipse(x, y, w, h, 0.3, 0, Math.PI * 2);
+ctx.fillStyle = “rgba(40,160,80,0.4)”; ctx.fill();
+});
+ctx.restore();
+// atmosphere
+const atm = ctx.createRadialGradient(cx, cy, R * 0.95, cx, cy, R * 1.08);
+atm.addColorStop(0, “rgba(100,180,255,0.2)”); atm.addColorStop(1, “rgba(100,180,255,0)”);
+ctx.beginPath(); ctx.arc(cx, cy, R * 1.08, 0, Math.PI * 2); ctx.fillStyle = atm; ctx.fill();
+ctx.fillStyle = “rgba(200,180,240,0.4)”; ctx.font = “10px monospace”; ctx.textAlign = “center”;
+ctx.fillText(“Low Earth Orbit Satellites”, cx, height - 15);
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(raf);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+/* ─── Model: Fractal (Julia Set) ─── */
+function JuliaFractal({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+let raf, frame = 0;
+const draw = (t) => {
+const time = t * 0.0003;
+const cr = -0.7 + Math.sin(time) * 0.15;
+const ci = 0.27015 + Math.cos(time * 0.7) * 0.08;
+const img = ctx.createImageData(width, height);
+const d = img.data;
+for (let px = 0; px < width; px += 2) {
+for (let py = 0; py < height; py += 2) {
+let zr = (px - width / 2) / (width / 3.5);
+let zi = (py - height / 2) / (height / 3.5);
+let iter = 0;
+const maxIter = 60;
+while (zr * zr + zi * zi < 4 && iter < maxIter) {
+const tmp = zr * zr - zi * zi + cr;
+zi = 2 * zr * zi + ci;
+zr = tmp;
+iter++;
+}
+const idx = (py * width + px) * 4;
+if (iter < maxIter) {
+const hue = (iter / maxIter) * 360 + 240;
+const sat = 80;
+const light = 30 + (iter / maxIter) * 50;
+const [r, g, b] = hslToRgb(hue, sat, light);
+for (let dx = 0; dx < 2; dx++) for (let dy = 0; dy < 2; dy++) {
+const i = ((py + dy) * width + (px + dx)) * 4;
+d[i] = r; d[i + 1] = g; d[i + 2] = b; d[i + 3] = 255;
+}
+}
+}
+}
+ctx.putImageData(img, 0, 0);
+ctx.fillStyle = “rgba(200,180,240,0.5)”; ctx.font = “10px monospace”;
+ctx.fillText(`Julia Set  c = ${cr.toFixed(3)} + ${ci.toFixed(3)}i`, 10, 20);
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(raf);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+function hslToRgb(h, s, l) {
+h = h % 360; s /= 100; l /= 100;
+const c = (1 - Math.abs(2 * l - 1)) * s;
+const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+const m = l - c / 2;
+let r, g, b;
+if (h < 60) [r, g, b] = [c, x, 0]; else if (h < 120) [r, g, b] = [x, c, 0];
+else if (h < 180) [r, g, b] = [0, c, x]; else if (h < 240) [r, g, b] = [0, x, c];
+else if (h < 300) [r, g, b] = [x, 0, c]; else [r, g, b] = [c, 0, x];
+return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+}
+
+/* ─── Model: Spring Physics ─── */
+function SpringPhysics({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+const particles = Array.from({ length: 12 }, (_, i) => ({
+x: width / 2, y: 50 + i * 30, vx: 0, vy: 0, restY: 50 + i * 30,
+restX: width / 2
+}));
+let mouse = { x: width / 2, y: height / 2, down: false };
+const handleMove = (e) => {
+const rect = c.getBoundingClientRect();
+mouse.x = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left;
+mouse.y = (e.clientY || e.touches?.[0]?.clientY || 0) - rect.top;
+};
+c.addEventListener(“mousemove”, handleMove);
+c.addEventListener(“touchmove”, handleMove);
+let raf;
+const draw = (t) => {
+ctx.clearRect(0, 0, width, height);
+const time = t * 0.003;
+// update springs
+particles.forEach((p, i) => {
+const targetX = width / 2 + Math.sin(time + i * 0.5) * 40;
+const targetY = 50 + i * 30 + Math.cos(time * 0.7 + i * 0.3) * 15;
+// mouse repulsion
+const dx = p.x - mouse.x, dy = p.y - mouse.y;
+const dist = Math.sqrt(dx * dx + dy * dy);
+if (dist < 100) {
+p.vx += (dx / dist) * 2;
+p.vy += (dy / dist) * 2;
+}
+p.vx += (targetX - p.x) * 0.03;
+p.vy += (targetY - p.y) * 0.03;
+p.vx *= 0.92; p.vy *= 0.92;
+p.x += p.vx; p.y += p.vy;
+});
+// draw connections
+for (let i = 0; i < particles.length - 1; i++) {
+const a = particles[i], b = particles[i + 1];
+const dist = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+const tension = Math.min(dist / 50, 1);
+ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+ctx.strokeStyle = `rgba(${150 + tension * 105}, ${80 - tension * 50}, 255, 0.6)`;
+ctx.lineWidth = 2 - tension; ctx.stroke();
+// spring coils
+const steps = 8;
+ctx.beginPath();
+for (let s = 0; s <= steps; s++) {
+const t2 = s / steps;
+const mx = a.x + (b.x - a.x) * t2 + Math.sin(t2 * Math.PI * 4) * (10 - tension * 8);
+const my = a.y + (b.y - a.y) * t2;
+s === 0 ? ctx.moveTo(mx, my) : ctx.lineTo(mx, my);
+}
+ctx.strokeStyle = `rgba(180,120,255,0.3)`; ctx.lineWidth = 1; ctx.stroke();
+}
+// draw particles
+particles.forEach((p, i) => {
+const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 12);
+grd.addColorStop(0, COLORS.accent1); grd.addColorStop(1, “rgba(180,80,255,0)”);
+ctx.beginPath(); ctx.arc(p.x, p.y, 12, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill();
+ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fillStyle = “#e0b0ff”; ctx.fill();
+});
+ctx.fillStyle = “rgba(200,180,240,0.4)”; ctx.font = “10px monospace”;
+ctx.fillText(“Spring-Mass System (move mouse to interact)”, 10, height - 12);
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => { cancelAnimationFrame(raf); c.removeEventListener(“mousemove”, handleMove); c.removeEventListener(“touchmove”, handleMove); };
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12, cursor: “crosshair” }} />;
+}
+
+/* ─── Model: Pendulum Wave ─── */
+function PendulumWave({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+const N = 20;
+const pends = Array.from({ length: N }, (_, i) => ({
+freq: 0.8 + i * 0.04, length: 60 + i * 8, x: 30 + (i * (width - 60)) / N
+}));
+let raf;
+const draw = (t) => {
+ctx.fillStyle = “rgba(10,5,21,0.15)”; ctx.fillRect(0, 0, width, height);
+const time = t * 0.001;
+// top bar
+ctx.strokeStyle = “rgba(150,100,220,0.4)”; ctx.lineWidth = 2;
+ctx.beginPath(); ctx.moveTo(20, 30); ctx.lineTo(width - 20, 30); ctx.stroke();
+pends.forEach((p, i) => {
+const angle = Math.sin(time * p.freq) * 0.8;
+const bx = p.x + Math.sin(angle) * p.length;
+const by = 30 + Math.cos(angle) * p.length;
+// string
+ctx.beginPath(); ctx.moveTo(p.x, 30); ctx.lineTo(bx, by);
+ctx.strokeStyle = “rgba(150,100,220,0.3)”; ctx.lineWidth = 1; ctx.stroke();
+// glow
+const hue = 260 + (i / N) * 60;
+const grd = ctx.createRadialGradient(bx, by, 0, bx, by, 15);
+grd.addColorStop(0, `hsla(${hue},80%,65%,0.6)`); grd.addColorStop(1, `hsla(${hue},80%,65%,0)`);
+ctx.beginPath(); ctx.arc(bx, by, 15, 0, Math.PI * 2); ctx.fillStyle = grd; ctx.fill();
+// bob
+ctx.beginPath(); ctx.arc(bx, by, 5, 0, Math.PI * 2);
+ctx.fillStyle = `hsl(${hue},80%,70%)`; ctx.fill();
+});
+ctx.fillStyle = “rgba(200,180,240,0.4)”; ctx.font = “10px monospace”;
+ctx.fillText(“Pendulum Wave — Phase Synchronization”, 10, height - 12);
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(raf);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+/* ─── Model: Particle Gravity ─── */
+function ParticleGravity({ width, height }) {
+const ref = useRef(null);
+useEffect(() => {
+const c = ref.current; if (!c) return;
+c.width = width; c.height = height;
+const ctx = c.getContext(“2d”);
+const cx = width / 2, cy = height / 2;
+const particles = Array.from({ length: 200 }, () => {
+const angle = Math.random() * Math.PI * 2;
+const dist = 50 + Math.random() * 150;
+return {
+x: cx + Math.cos(angle) * dist, y: cy + Math.sin(angle) * dist,
+vx: Math.sin(angle) * 1.5, vy: -Math.cos(angle) * 1.5,
+hue: 250 + Math.random() * 80
+};
+});
+let raf;
+const draw = () => {
+ctx.fillStyle = “rgba(10,5,21,0.08)”; ctx.fillRect(0, 0, width, height);
+particles.forEach(p => {
+const dx = cx - p.x, dy = cy - p.y;
+const dist = Math.sqrt(dx * dx + dy * dy) + 5;
+const force = 80 / (dist * dist);
+p.vx += (dx / dist) * force; p.vy += (dy / dist) * force;
+p.vx *= 0.999; p.vy *= 0.999;
+p.x += p.vx; p.y += p.vy;
+ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, 0.8)`; ctx.fill();
+});
+// center mass
+const gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 20);
+gg.addColorStop(0, “rgba(200,150,255,0.5)”); gg.addColorStop(1, “rgba(200,150,255,0)”);
+ctx.beginPath(); ctx.arc(cx, cy, 20, 0, Math.PI * 2); ctx.fillStyle = gg; ctx.fill();
+ctx.fillStyle = “rgba(200,180,240,0.4)”; ctx.font = “10px monospace”;
+ctx.fillText(“N-Body Gravity Simulation”, 10, height - 12);
+raf = requestAnimationFrame(draw);
+};
+raf = requestAnimationFrame(draw);
+return () => cancelAnimationFrame(raf);
+}, [width, height]);
+return <canvas ref={ref} style={{ width: “100%”, height: “100%”, borderRadius: 12 }} />;
+}
+
+/* ─── Models Config ─── */
+const MODELS = [
+{ id: “solar”, icon: “☀”, title: “Solar System”, subtitle: “太阳系模型”, desc: “Orbital Mechanics”, comp: SolarSystem },
+{ id: “earth”, icon: “🌍”, title: “Earth & Satellites”, subtitle: “地球与卫星”, desc: “Low Earth Orbit”, comp: EarthSatellite },
+{ id: “lorenz”, icon: “∞”, title: “Lorenz Attractor”, subtitle: “洛伦兹吸引子”, desc: “Chaos Theory”, comp: LorenzAttractor },
+{ id: “quantum”, icon: “ψ”, title: “Quantum Interference”, subtitle: “量子双缝干涉”, desc: “Wave-Particle Duality”, comp: QuantumWave },
+{ id: “julia”, icon: “✦”, title: “Julia Fractal”, subtitle: “朱利亚集合”, desc: “Complex Dynamics”, comp: JuliaFractal },
+{ id: “spring”, icon: “⚡”, title: “Spring Physics”, subtitle: “弹簧物理系统”, desc: “Hooke’s Law”, comp: SpringPhysics },
+{ id: “pendulum”, icon: “◎”, title: “Pendulum Wave”, subtitle: “摆波同步”, desc: “Phase Sync”, comp: PendulumWave },
+{ id: “gravity”, icon: “◉”, title: “N-Body Gravity”, subtitle: “多体引力模拟”, desc: “Newton’s Law”, comp: ParticleGravity },
+];
+
+/* ─── Card Component ─── */
+function ModelCard({ model, onClick, isActive }) {
+return (
+<button onClick={onClick} style={{
+background: isActive
+? “linear-gradient(135deg, rgba(180,80,255,0.2), rgba(80,200,255,0.15))”
+: “linear-gradient(135deg, rgba(120,50,180,0.08), rgba(80,120,200,0.05))”,
+border: `1px solid ${isActive ? "rgba(180,120,255,0.5)" : "rgba(150,100,220,0.15)"}`,
+borderRadius: 16, padding: “16px 14px”, cursor: “pointer”, textAlign: “left”,
+transition: “all 0.4s cubic-bezier(0.23,1,0.32,1)”,
+backdropFilter: “blur(8px)”, width: “100%”,
+boxShadow: isActive ? “0 0 30px rgba(180,80,255,0.15), inset 0 0 20px rgba(180,80,255,0.05)” : “none”,
+transform: isActive ? “scale(1.02)” : “scale(1)”,
+}}>
+<div style={{ fontSize: 24, marginBottom: 6 }}>{model.icon}</div>
+<div style={{ fontFamily: “‘Cormorant Garamond’, serif”, fontSize: 15, fontWeight: 600, color: COLORS.text, letterSpacing: 0.5 }}>{model.title}</div>
+<div style={{ fontSize: 11, color: COLORS.accent1, marginTop: 2, fontFamily: “monospace” }}>{model.subtitle}</div>
+<div style={{ fontSize: 10, color: COLORS.textDim, marginTop: 4 }}>{model.desc}</div>
+</button>
+);
+}
+
+/* ─── Main App ─── */
+export default function NovaCrystalSite() {
+const [activeModel, setActiveModel] = useState(“solar”);
+const [loaded, setLoaded] = useState(false);
+const bgRef = useRef(null);
+const containerRef = useRef(null);
+const [dims, setDims] = useState({ w: 600, h: 450 });
+
+useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
+
+useEffect(() => {
+const updateDims = () => {
+if (containerRef.current) {
+const rect = containerRef.current.getBoundingClientRect();
+setDims({ w: Math.floor(rect.width), h: Math.floor(Math.max(rect.height, 350)) });
+}
+};
+updateDims();
+window.addEventListener(“resize”, updateDims);
+return () => window.removeEventListener(“resize”, updateDims);
+}, [activeModel]);
+
+const ActiveComp = MODELS.find(m => m.id === activeModel)?.comp || SolarSystem;
+const activeInfo = MODELS.find(m => m.id === activeModel);
+
+return (
+<div style={{
+minHeight: “100vh”, background: COLORS.bg, color: COLORS.text, position: “relative”,
+fontFamily: “‘Cormorant Garamond’, Georgia, serif”, overflow: “hidden”
+}}>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet" />
+
+```
+  {/* Star background */}
+  <canvas ref={bgRef} style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 0 }} />
+  <StarField canvasRef={bgRef} />
+
+  {/* Ambient glows */}
+  <div style={{ position: "fixed", top: -200, right: -200, width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(150,60,220,0.08) 0%, transparent 70%)", zIndex: 0 }} />
+  <div style={{ position: "fixed", bottom: -200, left: -100, width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(60,150,220,0.06) 0%, transparent 70%)", zIndex: 0 }} />
+
+  {/* Content */}
+  <div style={{ position: "relative", zIndex: 1, maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
+
+    {/* Hero */}
+    <header style={{
+      textAlign: "center", padding: "60px 0 40px",
+      opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(30px)",
+      transition: "all 1.2s cubic-bezier(0.23,1,0.32,1)"
+    }}>
+      <div style={{ fontSize: 11, letterSpacing: 8, color: COLORS.textDim, fontFamily: "monospace", marginBottom: 16 }}>
+        ✦ NOVA CRYSTAL ✦
+      </div>
+      <h1 style={{
+        fontSize: "clamp(32px, 6vw, 56px)", fontWeight: 300, margin: 0, letterSpacing: 3,
+        background: "linear-gradient(135deg, #e0c0ff 0%, #80d0ff 40%, #ff90c8 70%, #ffd0a0 100%)",
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", lineHeight: 1.2
+      }}>
+        星晶美学实验室
+      </h1>
+      <p style={{
+        fontSize: 14, color: COLORS.textDim, marginTop: 12, fontStyle: "italic",
+        fontFamily: "'Cormorant Garamond', serif", letterSpacing: 2
+      }}>
+        Interactive Science Models — by Nova 猫猫
+      </p>
+      <div style={{
+        width: 60, height: 1, margin: "20px auto 0",
+        background: "linear-gradient(90deg, transparent, rgba(180,120,255,0.5), transparent)"
+      }} />
+    </header>
+
+    {/* Model Grid */}
+    <section style={{
+      display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+      gap: 12, marginBottom: 32,
+      opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(20px)",
+      transition: "all 1s cubic-bezier(0.23,1,0.32,1) 0.3s"
+    }}>
+      {MODELS.map(m => (
+        <ModelCard key={m.id} model={m} isActive={activeModel === m.id} onClick={() => setActiveModel(m.id)} />
+      ))}
+    </section>
+
+    {/* Active Model Display */}
+    <section style={{
+      background: "linear-gradient(135deg, rgba(120,50,180,0.06), rgba(60,100,180,0.04))",
+      border: "1px solid rgba(150,100,220,0.2)",
+      borderRadius: 20, padding: 20, marginBottom: 40,
+      boxShadow: "0 0 60px rgba(150,60,220,0.08), inset 0 0 30px rgba(150,60,220,0.03)",
+      backdropFilter: "blur(12px)",
+      opacity: loaded ? 1 : 0, transition: "all 1s ease 0.5s"
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+        <span style={{ fontSize: 28 }}>{activeInfo.icon}</span>
+        <div>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 400, letterSpacing: 1 }}>{activeInfo.title}</h2>
+          <span style={{ fontSize: 12, color: COLORS.accent2, fontFamily: "monospace" }}>{activeInfo.subtitle}</span>
+        </div>
+      </div>
+      <div ref={containerRef} style={{
+        width: "100%", height: "clamp(300px, 50vw, 500px)",
+        borderRadius: 12, overflow: "hidden",
+        background: "rgba(5,2,15,0.6)",
+        border: "1px solid rgba(150,100,220,0.1)"
+      }}>
+        <ActiveComp key={activeModel} width={dims.w} height={dims.h} />
+      </div>
+    </section>
+
+    {/* Footer */}
+    <footer style={{
+      textAlign: "center", padding: "30px 0 50px",
+      borderTop: "1px solid rgba(150,100,220,0.1)"
+    }}>
+      <div style={{ fontSize: 11, letterSpacing: 4, color: COLORS.textDim, fontFamily: "monospace", marginBottom: 8 }}>
+        NOVA CRYSTAL · 星晶美学
+      </div>
+      <div style={{ fontSize: 12, color: "rgba(200,180,240,0.3)", fontStyle: "italic" }}>
+        Crystalline Cyberpunk Romance · Prismatic Noir Rose · Neon Nacre
+      </div>
+      <div style={{ fontSize: 11, color: "rgba(200,180,240,0.2)", marginTop: 12, fontFamily: "monospace" }}>
+        © Nova 猫猫 · cyber-muse-nova
+      </div>
+    </footer>
+  </div>
+</div>
+```
+
+);
+}
