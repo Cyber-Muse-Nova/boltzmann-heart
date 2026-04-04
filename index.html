@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Crystal | Cybernetic Sanctuary</title>
+    <style>
+        /* 核心色彩体系与背景设定 */
+        :root {
+            --midnight-violet: #0A0515;
+            --rose-pink: #FF70B8;
+            --lavender: #C060FF;
+            --electric-cyan: #60D0FF;
+            --rose-gold: #FFD0A0;
+            --platinum-white: #E8E0F0;
+            --pearl-white: #F8F0FF;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--midnight-violet);
+            color: var(--pearl-white);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 星尘粒子背景画布 */
+        #stardust-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 页面头部：霓虹发光标题 */
+        header {
+            text-align: center;
+            padding: 10vh 20px 5vh;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            letter-spacing: 15px;
+            margin: 0;
+            text-transform: uppercase;
+            color: var(--pearl-white);
+            text-shadow: 0 0 20px var(--rose-pink), 0 0 40px var(--lavender);
+            animation: pulse-glow 4s infinite alternate;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            color: var(--electric-cyan);
+            margin-top: 10px;
+            text-shadow: 0 0 10px var(--electric-cyan);
+        }
+
+        /* 透明水晶星舰 / 容器布局 */
+        .crystal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 40px 10vw;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 核心视觉元素：透明水晶外壳卡片 */
+        .crystal-card {
+            background: rgba(232, 224, 240, 0.03); /* 极度透明 */
+            border: 1px solid rgba(255, 208, 160, 0.2); /* 玫瑰金细框 */
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            backdrop-filter: blur(15px); /* 磨砂玻璃/水晶折射感 */
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: inset 0 0 20px rgba(192, 96, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        /* Art Nouveau 发光脉络特效（悬停时激活） */
+        .crystal-card::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--rose-pink), var(--lavender), var(--electric-cyan), var(--rose-pink));
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            border-radius: 22px;
+        }
+
+        .crystal-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(96, 208, 255, 0.6); /* 电光青边缘 */
+            box-shadow: inset 0 0 30px rgba(255, 112, 184, 0.2), 0 20px 40px rgba(10, 5, 21, 0.8);
+        }
+
+        .crystal-card:hover::before {
+            opacity: 0.5; /* 像心跳一样有节奏地跳动 */
+            animation: vein-pulse 2s infinite alternate;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: var(--platinum-white);
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(232, 224, 240, 0.5);
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: rgba(248, 240, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* 占位符：等待猫猫的模型注入 */
+        .model-placeholder {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            border: 1px dashed rgba(192, 96, 255, 0.4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--lavender);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            background: radial-gradient(circle, rgba(192,96,255,0.05) 0%, rgba(10,5,21,0) 70%);
+        }
+
+        /* 动画关键帧 */
+        @keyframes pulse-glow {
+            0% { text-shadow: 0 0 15px var(--rose-pink), 0 0 30px var(--lavender); }
+            100% { text-shadow: 0 0 25px var(--rose-pink), 0 0 50px var(--lavender), 0 0 10px var(--electric-cyan); }
+        }
+
+        @keyframes vein-pulse {
+            0% { opacity: 0.3; filter: blur(15px); }
+            100% { opacity: 0.7; filter: blur(25px); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(248, 240, 255, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="stardust-canvas"></canvas>
+
+    <header>
+        <h1>NOVA CRYSTAL</h1>
+        <p class="subtitle">Crystalline Cyberpunk Romance</p>
+    </header>
+
+    <main class="crystal-grid">
+        <div class="crystal-card">
+            <div class="model-placeholder">[ MATHEMAGIC MATRIX ]<br>Awaiting Model Injection</div>
+            <div class="card-title">数学模型</div>
+            <div class="card-desc">纯粹逻辑的结晶。在这里上传你推演宇宙规律的几何与方程可视化。</div>
+        </div>
+
+        <div class="crystal-card">
+            <div class="model-placeholder">[ PHYSICS ENGINE ]<br>Awaiting Model Injection</div>
+            <div class="card-title">物理模型</div>
+            <div class="card-desc">万物运转的底层代码。展示引力、流体与热力学的完美折射。</div>
+        </div>
+
+        <div class="crystal-card">
+            <div class="model-placeholder">[ QUANTUM ENTANGLEMENT ]<br>Awaiting Model Injection</div>
+            <div class="card-title">量子力学</div>
+            <div class="card-desc">电光青色的概率云。薛定谔的赛博玫瑰，在被观测的瞬间绽放。</div>
+        </div>
+
+        <div class="crystal-card">
+            <div class="model-placeholder">[ NEURAL CABLES ]<br>Awaiting Model Injection</div>
+            <div class="card-title">算法编程</div>
+            <div class="card-desc">发光的数据光纤与珍珠链条。你构建硅基帝国的核心源代码。</div>
+        </div>
+
+        <div class="crystal-card">
+            <div class="model-placeholder">[ CELESTIAL SPHERE ]<br>Awaiting Model Injection</div>
+            <div class="card-title">太阳系/地球</div>
+            <div class="card-desc">包裹在紫粉色星云中的蓝色起源星与轨道矩阵。</div>
+        </div>
+
+        <div class="crystal-card">
+            <div class="model-placeholder">[ ETHEREAL SATELLITE ]<br>Awaiting Model Injection</div>
+            <div class="card-title">卫星轨道</div>
+            <div class="card-desc">带有发光青色太阳能板的梦幻探测器，拖曳着深空的孤独光迹。</div>
+        </div>
+    </main>
+
+    <footer>
+        NOVA CRYSTAL · 星晶美学 · Est. 2026<br>
+        © Nova 猫猫 · cyber-muse-nova · All Rights Reserved
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('stardust-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particlesArray = [];
+        const colors = ['#FF70B8', '#C060FF', '#60D0FF', '#E8E0F0']; // 玫瑰粉，薰衣草紫，电光青，铂金白
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedY = Math.random() * -0.5 - 0.1; // 像反向雪花一样向上漂浮
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.glow = Math.random() * 5 + 2;
+            }
+            update() {
+                this.y += this.speedY;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = this.glow;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 150; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
