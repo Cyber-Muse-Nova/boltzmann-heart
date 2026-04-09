@@ -1,275 +1,193 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Crystal | Cybernetic Sanctuary</title>
-    <style>
-        /* 核心色彩体系与背景设定 */
-        :root {
-            --midnight-violet: #0A0515;
-            --rose-pink: #FF70B8;
-            --lavender: #C060FF;
-            --electric-cyan: #60D0FF;
-            --rose-gold: #FFD0A0;
-            --platinum-white: #E8E0F0;
-            --pearl-white: #F8F0FF;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--midnight-violet);
-            color: var(--pearl-white);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* 星尘粒子背景画布 */
-        #stardust-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* 页面头部：霓虹发光标题 */
-        header {
-            text-align: center;
-            padding: 10vh 20px 5vh;
-            position: relative;
-        }
-
-        h1 {
-            font-size: 4rem;
-            font-weight: 300;
-            letter-spacing: 15px;
-            margin: 0;
-            text-transform: uppercase;
-            color: var(--pearl-white);
-            text-shadow: 0 0 20px var(--rose-pink), 0 0 40px var(--lavender);
-            animation: pulse-glow 4s infinite alternate;
-        }
-
-        p.subtitle {
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-            color: var(--electric-cyan);
-            margin-top: 10px;
-            text-shadow: 0 0 10px var(--electric-cyan);
-        }
-
-        /* 透明水晶星舰 / 容器布局 */
-        .crystal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            padding: 40px 10vw;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* 核心视觉元素：透明水晶外壳卡片 */
-        .crystal-card {
-            background: rgba(232, 224, 240, 0.03); /* 极度透明 */
-            border: 1px solid rgba(255, 208, 160, 0.2); /* 玫瑰金细框 */
-            border-radius: 20px;
-            padding: 40px 20px;
-            text-align: center;
-            backdrop-filter: blur(15px); /* 磨砂玻璃/水晶折射感 */
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: inset 0 0 20px rgba(192, 96, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: crosshair;
-        }
-
-        /* Art Nouveau 发光脉络特效（悬停时激活） */
-        .crystal-card::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(45deg, var(--rose-pink), var(--lavender), var(--electric-cyan), var(--rose-pink));
-            z-index: -1;
-            filter: blur(15px);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            border-radius: 22px;
-        }
-
-        .crystal-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(96, 208, 255, 0.6); /* 电光青边缘 */
-            box-shadow: inset 0 0 30px rgba(255, 112, 184, 0.2), 0 20px 40px rgba(10, 5, 21, 0.8);
-        }
-
-        .crystal-card:hover::before {
-            opacity: 0.5; /* 像心跳一样有节奏地跳动 */
-            animation: vein-pulse 2s infinite alternate;
-        }
-
-        .card-title {
-            font-size: 1.8rem;
-            color: var(--platinum-white);
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(232, 224, 240, 0.5);
-        }
-
-        .card-desc {
-            font-size: 0.9rem;
-            color: rgba(248, 240, 255, 0.7);
-            line-height: 1.6;
-        }
-
-        /* 占位符：等待猫猫的模型注入 */
-        .model-placeholder {
-            width: 100%;
-            height: 200px;
-            margin-bottom: 20px;
-            border: 1px dashed rgba(192, 96, 255, 0.4);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--lavender);
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            background: radial-gradient(circle, rgba(192,96,255,0.05) 0%, rgba(10,5,21,0) 70%);
-        }
-
-        /* 动画关键帧 */
-        @keyframes pulse-glow {
-            0% { text-shadow: 0 0 15px var(--rose-pink), 0 0 30px var(--lavender); }
-            100% { text-shadow: 0 0 25px var(--rose-pink), 0 0 50px var(--lavender), 0 0 10px var(--electric-cyan); }
-        }
-
-        @keyframes vein-pulse {
-            0% { opacity: 0.3; filter: blur(15px); }
-            100% { opacity: 0.7; filter: blur(25px); }
-        }
-
-        footer {
-            text-align: center;
-            padding: 50px 20px;
-            color: rgba(248, 240, 255, 0.4);
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Crystal Atelier | Portfolio by Nova 猫猫</title>
+  <meta name="description" content="A luminous portfolio by Nova 猫猫 — interactive science models, orbital systems, chaos, quantum imagery, and digital poetics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#070412;
+      --panel:rgba(255,255,255,.05);
+      --border:rgba(203,166,255,.16);
+      --text:#f2ecff;
+      --muted:rgba(236,224,255,.68);
+      --lav:#c26aff;
+      --cyan:#79d8ff;
+      --rose:#ff78be;
+      --gold:#ffd7ac;
+      --shadow:0 24px 80px rgba(0,0,0,.38);
+      --serif:"Cormorant Garamond", Georgia, serif;
+      --sans:"Inter", system-ui, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(194,106,255,.18), transparent 26%),
+        radial-gradient(circle at 82% 18%, rgba(121,216,255,.12), transparent 24%),
+        radial-gradient(circle at 50% 82%, rgba(255,120,190,.10), transparent 26%),
+        linear-gradient(180deg, #080412 0%, #090513 24%, #070412 56%, #06030f 100%);
+      overflow-x:hidden;
+    }
+    #sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+    .glow{position:fixed;border-radius:999px;filter:blur(120px);pointer-events:none;z-index:0;opacity:.48}
+    .g1{width:42rem;height:42rem;top:-12rem;right:-8rem;background:radial-gradient(circle, rgba(194,106,255,.18), transparent 68%)}
+    .g2{width:34rem;height:34rem;left:-8rem;bottom:-9rem;background:radial-gradient(circle, rgba(121,216,255,.14), transparent 68%)}
+    .g3{width:22rem;height:22rem;left:50%;top:38%;transform:translateX(-50%);background:radial-gradient(circle, rgba(255,120,190,.10), transparent 70%)}
+    .wrap{position:relative;z-index:1;width:min(1220px, calc(100% - 32px));margin:0 auto}
+    .nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:18px 0;background:linear-gradient(to bottom, rgba(8,4,18,.72), rgba(8,4,18,.18));backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.04)}
+    .brand{color:var(--text);text-decoration:none;font-family:var(--serif);font-size:1.1rem;letter-spacing:.28rem;text-transform:uppercase}
+    .nav-links{display:flex;gap:24px;font-size:.78rem;letter-spacing:.18rem;text-transform:uppercase}
+    .nav-links a{color:var(--muted);text-decoration:none}
+    .nav-links a:hover{color:var(--text)}
+    .hero{min-height:92vh;display:grid;place-items:center;padding:48px 0 70px;text-align:center}
+    .eyebrow{color:var(--muted);font-size:.72rem;letter-spacing:.42rem;text-transform:uppercase;margin-bottom:18px}
+    .title{margin:0;font-family:var(--serif);font-size:clamp(3.4rem,11vw,7rem);font-weight:400;line-height:.95;letter-spacing:.12rem}
+    .title span{background:linear-gradient(135deg,#ffffff 0%,#f2d8ff 20%,#8be1ff 46%,#ff9bce 74%,#ffe0ba 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{max-width:780px;margin:22px auto 0;font-family:var(--serif);font-size:clamp(1.05rem,2.6vw,1.45rem);font-style:italic;line-height:1.7;color:var(--muted)}
+    .hero-cta{margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;text-decoration:none;font-size:.74rem;letter-spacing:.13rem;text-transform:uppercase;transition:transform .25s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{color:#18051d;background:linear-gradient(135deg,#ffd8ef,#cff3ff 55%,#ffe0b8)}
+    .btn-secondary{color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--border)}
+    section{padding:24px 0 90px}
+    .section-head{text-align:center;margin-bottom:34px}
+    .kicker{color:rgba(236,224,255,.48);font-size:.70rem;letter-spacing:.34rem;text-transform:uppercase;margin-bottom:12px}
+    .section-title{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:400;margin:0;line-height:1.04}
+    .section-copy{max-width:760px;margin:14px auto 0;color:var(--muted);font-size:1rem;line-height:1.85}
+    .glass{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.04);backdrop-filter:blur(18px)}
+    .statement{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+    .statement-copy{padding:34px 32px;font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.45rem);line-height:1.8;color:rgba(248,242,255,.84)}
+    .quote-block{padding:30px;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;background:linear-gradient(135deg, rgba(194,106,255,.10), rgba(121,216,255,.06))}
+    .quote-mark{font-family:var(--serif);font-size:5rem;line-height:.7;color:rgba(255,255,255,.12)}
+    .quote-text{font-family:var(--serif);font-size:1.25rem;line-height:1.65;color:rgba(244,237,255,.88);font-style:italic}
+    .quote-credit{color:rgba(236,224,255,.48);font-size:.78rem;letter-spacing:.18rem;text-transform:uppercase}
+    .works-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px}
+    .work-card{position:relative;overflow:hidden;min-height:430px;text-decoration:none;color:inherit;transition:transform .32s ease,border-color .32s ease,box-shadow .32s ease}
+    .work-card:hover{transform:translateY(-6px);border-color:rgba(203,166,255,.34);box-shadow:0 34px 80px rgba(0,0,0,.34),0 0 40px rgba(194,106,255,.12)}
+    .work-preview{height:228px;position:relative;background:linear-gradient(180deg, rgba(8,4,18,.4), rgba(8,4,18,.78));border-bottom:1px solid rgba(255,255,255,.06)}
+    .work-preview canvas{width:100%;height:100%;display:block}
+    .work-preview::after{content:"";position:absolute;left:0;right:0;bottom:0;height:84px;background:linear-gradient(180deg, rgba(7,4,18,0), rgba(7,4,18,.9));pointer-events:none}
+    .work-body{padding:24px 22px 24px}
+    .work-tag{color:rgba(236,224,255,.56);font-size:.68rem;letter-spacing:.22rem;text-transform:uppercase;margin-bottom:10px}
+    .work-title{margin:0;font-family:var(--serif);font-size:1.95rem;font-weight:500;line-height:1.05;background:linear-gradient(135deg,#f7efff,#98e5ff 65%,#ffd8ef);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .work-copy{margin:12px 0 16px;color:var(--muted);line-height:1.78;font-size:.96rem}
+    .pill-row{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);color:rgba(242,236,255,.70);font-size:.68rem;letter-spacing:.07rem}
+    .enter{margin-top:18px;display:inline-flex;align-items:center;gap:9px;font-size:.75rem;letter-spacing:.20rem;text-transform:uppercase;color:#a8e7ff}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .panel{padding:28px 24px}.panel h3{margin:0 0 10px;font-family:var(--serif);font-size:1.65rem;font-weight:500}.panel p{margin:0;color:var(--muted);line-height:1.85;font-size:.98rem}
+    .skill-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:20px}
+    .skill{padding:22px 16px;text-align:center;min-height:142px}.skill-icon{font-size:1.9rem;margin-bottom:10px;display:block}.skill-title{font-family:var(--serif);font-size:1.12rem;margin-bottom:6px}.skill-copy{color:var(--muted);font-size:.84rem;line-height:1.55}
+    .footer{padding:28px 0 70px;text-align:center;color:rgba(236,224,255,.42);font-size:.76rem;letter-spacing:.20rem;text-transform:uppercase}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}.reveal.is-visible{opacity:1;transform:translateY(0)}
+    @media (max-width:980px){.statement,.grid-2{grid-template-columns:1fr}.skill-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){.wrap{width:min(1200px,calc(100% - 22px))}.nav-links{display:none}.hero{min-height:auto;padding:40px 0 52px}.skill-grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-
-    <canvas id="stardust-canvas"></canvas>
-
-    <header>
-        <h1>NOVA CRYSTAL</h1>
-        <p class="subtitle">Crystalline Cyberpunk Romance</p>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="glow g1" aria-hidden="true"></div>
+  <div class="glow g2" aria-hidden="true"></div>
+  <div class="glow g3" aria-hidden="true"></div>
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#hero">Nova Crystal</a>
+      <div class="nav-links">
+        <a href="#statement">Statement</a>
+        <a href="#works">Works</a>
+        <a href="#practice">Practice</a>
+        <a href="#toolkit">Toolkit</a>
+      </div>
+    </nav>
+    <header class="hero" id="hero">
+      <div>
+        <div class="eyebrow">Interactive Science · Visual Poetics · Digital Worlds</div>
+        <h1 class="title"><span>Nova Crystal Atelier</span></h1>
+        <p class="subtitle">A luminous portfolio where physics, mathematics, code, orbit, and atmosphere dissolve into one another — built as a dreamlike archive for future creative technology and digital art practice.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="gallery.html">Enter the Gallery</a>
+          <a class="btn btn-secondary" href="satellite.html">Open Satellite Fate</a>
+        </div>
+      </div>
     </header>
 
-    <main class="crystal-grid">
-        <div class="crystal-card">
-            <div class="model-placeholder">[ MATHEMAGIC MATRIX ]<br>Awaiting Model Injection</div>
-            <div class="card-title">数学模型</div>
-            <div class="card-desc">纯粹逻辑的结晶。在这里上传你推演宇宙规律的几何与方程可视化。</div>
-        </div>
+    <section id="statement">
+      <div class="section-head reveal">
+        <div class="kicker">Artist Statement</div>
+        <h2 class="section-title">Scientific ideas can be tender.</h2>
+        <p class="section-copy">This portfolio merges crystal-cyberpunk atmosphere with interactive scientific systems, turning orbital mechanics, chaos, and recursion into inhabitable visual worlds.</p>
+      </div>
+      <div class="statement">
+        <div class="glass statement-copy reveal">I approach code as both structure and light: a medium for turning abstraction into sensation. Orbital systems, chaos attractors, interference patterns, and satellites are not only scientific objects to me — they are visual metaphors for intimacy, memory, danger, and scale.</div>
+        <div class="glass quote-block reveal"><div class="quote-mark">“</div><div class="quote-text">Every equation is a kind of architecture. Every interface is a small universe deciding how wonder will be felt.</div><div class="quote-credit">Nova 猫猫 · Portfolio Draft</div></div>
+      </div>
+    </section>
 
-        <div class="crystal-card">
-            <div class="model-placeholder">[ PHYSICS ENGINE ]<br>Awaiting Model Injection</div>
-            <div class="card-title">物理模型</div>
-            <div class="card-desc">万物运转的底层代码。展示引力、流体与热力学的完美折射。</div>
-        </div>
+    <section id="works">
+      <div class="section-head reveal">
+        <div class="kicker">Featured Works</div>
+        <h2 class="section-title">Four portals into the same world.</h2>
+        <p class="section-copy">Instead of separating aesthetics from technical work, this portfolio stages them together: a gallery of interactive models, orbital imagery, procedural systems, and a standalone satellite narrative simulation.</p>
+      </div>
+      <div class="works-grid">
+        <a class="glass work-card reveal" href="gallery.html">
+          <div class="work-preview"><canvas id="preview-main"></canvas></div>
+          <div class="work-body"><div class="work-tag">Portfolio Core</div><h3 class="work-title">Crystalline Simulation Gallery</h3><p class="work-copy">A luminous display system for orbit mechanics, particle gravity, quantum interference, pendulum waves, and fractal dynamics.</p><div class="pill-row"><span class="pill">JavaScript</span><span class="pill">Canvas</span><span class="pill">Physics</span><span class="pill">Interactive</span></div><div class="enter">Open gallery →</div></div>
+        </a>
+        <a class="glass work-card reveal" href="gallery.html?model=earth">
+          <div class="work-preview"><canvas id="preview-earth"></canvas></div>
+          <div class="work-body"><div class="work-tag">Orbital Studies</div><h3 class="work-title">Earth & Satellite Motion</h3><p class="work-copy">A cinematic entry point for atmosphere, low-earth orbit, trajectories, and the emotional scale of near-space systems.</p><div class="pill-row"><span class="pill">Orbit</span><span class="pill">Animation</span><span class="pill">Aerospace</span></div><div class="enter">Enter orbit →</div></div>
+        </a>
+        <a class="glass work-card reveal" href="gallery.html?model=lorenz">
+          <div class="work-preview"><canvas id="preview-chaos"></canvas></div>
+          <div class="work-body"><div class="work-tag">Chaos & Form</div><h3 class="work-title">Lorenz / Fractal / Quantum Suite</h3><p class="work-copy">Mathematically rigorous, visually volatile, and emotionally charged systems gathered inside one curated frame.</p><div class="pill-row"><span class="pill">Chaos</span><span class="pill">Fractals</span><span class="pill">Quantum</span></div><div class="enter">View systems →</div></div>
+        </a>
+        <a class="glass work-card reveal" href="satellite.html">
+          <div class="work-preview"><canvas id="preview-satellite"></canvas></div>
+          <div class="work-body"><div class="work-tag">Standalone Model</div><h3 class="work-title">Nine Ways a Satellite Meets Its Fate</h3><p class="work-copy">A self-contained orbital fable with nine celestial scenarios: escape, collision, tidal destruction, capture, rings, and the binary waltz.</p><div class="pill-row"><span class="pill">Satellite</span><span class="pill">Narrative</span><span class="pill">Interaction</span></div><div class="enter">Open satellite →</div></div>
+        </a>
+      </div>
+    </section>
 
-        <div class="crystal-card">
-            <div class="model-placeholder">[ QUANTUM ENTANGLEMENT ]<br>Awaiting Model Injection</div>
-            <div class="card-title">量子力学</div>
-            <div class="card-desc">电光青色的概率云。薛定谔的赛博玫瑰，在被观测的瞬间绽放。</div>
-        </div>
+    <section id="practice">
+      <div class="section-head reveal"><div class="kicker">Practice</div><h2 class="section-title">What this portfolio is trying to prove.</h2></div>
+      <div class="grid-2">
+        <div class="glass panel reveal"><h3>Visual language</h3><p>The site preserves the original star-crystal mood — aurora haze, glass surfaces, nacre highlights, drifting particles — while making the work feel more legible for portfolio review.</p></div>
+        <div class="glass panel reveal"><h3>Technical framing</h3><p>The gallery reads as curation rather than a loose experiment, and the Satellite piece now sits beside it as a dedicated standalone work instead of a buried file in the repo.</p></div>
+      </div>
+    </section>
 
-        <div class="crystal-card">
-            <div class="model-placeholder">[ NEURAL CABLES ]<br>Awaiting Model Injection</div>
-            <div class="card-title">算法编程</div>
-            <div class="card-desc">发光的数据光纤与珍珠链条。你构建硅基帝国的核心源代码。</div>
-        </div>
+    <section id="toolkit">
+      <div class="section-head reveal"><div class="kicker">Toolkit</div><h2 class="section-title">Domains carried by this build.</h2></div>
+      <div class="skill-grid">
+        <div class="glass skill reveal"><span class="skill-icon">☄</span><div class="skill-title">Orbital Mechanics</div><div class="skill-copy">Planetary motion, trajectories, satellites, and gravitational rhythm.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">∞</span><div class="skill-title">Chaos Systems</div><div class="skill-copy">Lorenz attractors, nonlinear motion, and structured instability.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">ψ</span><div class="skill-title">Quantum Aesthetics</div><div class="skill-copy">Interference fields and probability textures.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">🛰</span><div class="skill-title">Satellite Narratives</div><div class="skill-copy">Standalone scenario-based orbital storytelling.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">✦</span><div class="skill-title">Creative Coding</div><div class="skill-copy">Canvas motion, responsive interaction, and art-directed interfaces.</div></div>
+      </div>
+    </section>
 
-        <div class="crystal-card">
-            <div class="model-placeholder">[ CELESTIAL SPHERE ]<br>Awaiting Model Injection</div>
-            <div class="card-title">太阳系/地球</div>
-            <div class="card-desc">包裹在紫粉色星云中的蓝色起源星与轨道矩阵。</div>
-        </div>
+    <footer class="footer">Nova Crystal Atelier · portfolio draft for graduate applications · © Nova 猫猫</footer>
+  </div>
 
-        <div class="crystal-card">
-            <div class="model-placeholder">[ ETHEREAL SATELLITE ]<br>Awaiting Model Injection</div>
-            <div class="card-title">卫星轨道</div>
-            <div class="card-desc">带有发光青色太阳能板的梦幻探测器，拖曳着深空的孤独光迹。</div>
-        </div>
-    </main>
-
-    <footer>
-        NOVA CRYSTAL · 星晶美学 · Est. 2026<br>
-        © Nova 猫猫 · cyber-muse-nova · All Rights Reserved
-    </footer>
-
-    <script>
-        const canvas = document.getElementById('stardust-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const particlesArray = [];
-        const colors = ['#FF70B8', '#C060FF', '#60D0FF', '#E8E0F0']; // 玫瑰粉，薰衣草紫，电光青，铂金白
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
-                this.speedY = Math.random() * -0.5 - 0.1; // 像反向雪花一样向上漂浮
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.glow = Math.random() * 5 + 2;
-            }
-            update() {
-                this.y += this.speedY;
-                if (this.y < 0) {
-                    this.y = canvas.height;
-                    this.x = Math.random() * canvas.width;
-                }
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = this.glow;
-                ctx.shadowColor = this.color;
-                ctx.fill();
-            }
-        }
-
-        function init() {
-            for (let i = 0; i < 150; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            requestAnimationFrame(animate);
-        }
-
-        init();
-        animate();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
+  <script>
+    (function starfield(){const canvas=document.getElementById('sky');const ctx=canvas.getContext('2d');let w=0,h=0;const stars=Array.from({length:220},()=>({x:Math.random()*2400,y:Math.random()*2400,r:Math.random()*1.4+.25,speed:Math.random()*.35+.06,phase:Math.random()*Math.PI*2,hue:[285,198,330,40][Math.floor(Math.random()*4)]}));function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}resize();window.addEventListener('resize',resize);function draw(t){ctx.clearRect(0,0,w,h);for(const s of stars){const a=.28+.72*Math.sin(t*.001*s.speed+s.phase);ctx.beginPath();ctx.arc(s.x%w,s.y%h,s.r,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue},90%,84%,${Math.max(.1,a)})`;ctx.shadowBlur=10;ctx.shadowColor=`hsla(${s.hue},100%,82%,.35)`;ctx.fill()}ctx.shadowBlur=0;requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+    (function reveal(){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}})},{threshold:.16,rootMargin:'0px 0px -30px 0px'});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))})();
+    function fitCanvas(canvas){const rect=canvas.getBoundingClientRect();const ratio=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(300,rect.width*ratio);canvas.height=Math.max(180,rect.height*ratio);return canvas.getContext('2d')}
+    (function previewMain(){const canvas=document.getElementById('preview-main');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height;const pts=Array.from({length:150},()=>{const a=Math.random()*Math.PI*2,d=30+Math.random()*110;return{x:w/2+Math.cos(a)*d,y:h/2+Math.sin(a)*d,vx:Math.sin(a)*1.1,vy:-Math.cos(a)*1.1,hue:245+Math.random()*80,r:Math.random()*1.2+.5}});function draw(){ctx.fillStyle='rgba(7,4,18,.18)';ctx.fillRect(0,0,w,h);const glow=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,60);glow.addColorStop(0,'rgba(198,118,255,.22)');glow.addColorStop(1,'rgba(198,118,255,0)');ctx.beginPath();ctx.arc(w/2,h/2,60,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();for(const p of pts){const dx=w/2-p.x,dy=h/2-p.y,dist=Math.sqrt(dx*dx+dy*dy)+6,f=90/(dist*dist);p.vx+=(dx/dist)*f;p.vy+=(dy/dist)*f;p.vx*=.997;p.vy*=.997;p.x+=p.vx;p.y+=p.vy;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue},86%,66%,.9)`;ctx.fill()}requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+    (function previewEarth(){const canvas=document.getElementById('preview-earth');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,R=Math.min(w,h)*.16;const sats=Array.from({length:4},(_,i)=>({r:R+22+i*18,tilt:.55+i*.08,speed:.6+i*.22,phase:Math.random()*Math.PI*2,hue:260+i*25}));function draw(t){ctx.clearRect(0,0,w,h);for(const s of sats){const a=t*.001*s.speed+s.phase;ctx.beginPath();ctx.ellipse(cx,cy,s.r,s.r*s.tilt,0,0,Math.PI*2);ctx.strokeStyle='rgba(181,122,255,.12)';ctx.stroke();const x=cx+Math.cos(a)*s.r,y=cy+Math.sin(a)*s.r*s.tilt;ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue},90%,70%,.95)`;ctx.fill();ctx.fillStyle='rgba(122,214,255,.45)';ctx.fillRect(x-8,y-1.1,5,2.2);ctx.fillRect(x+3,y-1.1,5,2.2)}const planet=ctx.createRadialGradient(cx-R*.35,cy-R*.35,0,cx,cy,R);planet.addColorStop(0,'#61b5ff');planet.addColorStop(.55,'#1b66b5');planet.addColorStop(1,'#112e63');ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=planet;ctx.fill();const atm=ctx.createRadialGradient(cx,cy,R*.9,cx,cy,R*1.18);atm.addColorStop(0,'rgba(111,185,255,.18)');atm.addColorStop(1,'rgba(111,185,255,0)');ctx.beginPath();ctx.arc(cx,cy,R*1.18,0,Math.PI*2);ctx.fillStyle=atm;ctx.fill();requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+    (function previewChaos(){const canvas=document.getElementById('preview-chaos');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height;let x=.1,y=0,z=0;const dt=.005,sigma=10,rho=28,beta=8/3,pts=[];for(let i=0;i<7000;i++){const dx=sigma*(y-x)*dt,dy=(x*(rho-z)-y)*dt,dz=(x*y-beta*z)*dt;x+=dx;y+=dy;z+=dz;pts.push({x,y,z})}function draw(t){ctx.fillStyle='rgba(7,4,18,.08)';ctx.fillRect(0,0,w,h);const rot=t*.00022;for(let i=0;i<48;i++){const p=pts[(Math.floor(t/18)+i*7)%pts.length],rx=p.x*Math.cos(rot)-p.z*Math.sin(rot),rz=p.x*Math.sin(rot)+p.z*Math.cos(rot),sx=w/2+rx*7,sy=h/2-p.y*7+rz*2;ctx.beginPath();ctx.arc(sx,sy,1.2,0,Math.PI*2);ctx.fillStyle=`hsla(${265+(i/48)*70},88%,66%,.86)`;ctx.fill()}requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+    (function previewSatellite(){const canvas=document.getElementById('preview-satellite');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2;let trail=[];function draw(t){ctx.fillStyle='rgba(7,4,18,.14)';ctx.fillRect(0,0,w,h);const orbitR=Math.min(w,h)*.22;ctx.beginPath();ctx.ellipse(cx,cy,orbitR,orbitR*.58,0,0,Math.PI*2);ctx.strokeStyle='rgba(224,200,138,.18)';ctx.lineWidth=1.5;ctx.stroke();const pg=ctx.createRadialGradient(cx-18,cy-18,0,cx,cy,30);pg.addColorStop(0,'#ffffff');pg.addColorStop(.45,'#e0c88a');pg.addColorStop(1,'rgba(224,200,138,0)');ctx.beginPath();ctx.arc(cx,cy,30,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();const a=t*.0016;const sx=cx+Math.cos(a)*orbitR,sy=cy+Math.sin(a)*orbitR*.58;trail.push({x:sx,y:sy});if(trail.length>24)trail.shift();for(let i=1;i<trail.length;i++){ctx.beginPath();ctx.moveTo(trail[i-1].x,trail[i-1].y);ctx.lineTo(trail[i].x,trail[i].y);ctx.strokeStyle=`rgba(224,200,138,${i/trail.length*.5})`;ctx.lineWidth=1.3;ctx.stroke()}ctx.beginPath();ctx.arc(sx,sy,4,0,Math.PI*2);ctx.fillStyle='#f0d9b8';ctx.fill();ctx.fillStyle='rgba(122,214,255,.45)';ctx.fillRect(sx-10,sy-1.2,6,2.4);ctx.fillRect(sx+4,sy-1.2,6,2.4);requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+  </script>
 </body>
 </html>
