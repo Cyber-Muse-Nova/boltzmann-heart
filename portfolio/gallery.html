@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Crystal Gallery | Interactive Science Models</title>
+  <meta name="description" content="Interactive science visualizations by Nova 猫猫 — orbital mechanics, chaos theory, quantum interference, fractals, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#070412;
+      --bg-2:#0d0820;
+      --panel:rgba(255,255,255,0.04);
+      --panel-strong:rgba(255,255,255,0.07);
+      --border:rgba(203,166,255,0.16);
+      --text:#f2ecff;
+      --muted:rgba(236,224,255,0.66);
+      --rose:#ff78be;
+      --lav:#c26aff;
+      --cyan:#79d8ff;
+      --gold:#ffd7ac;
+      --serif:"Cormorant Garamond", Georgia, serif;
+      --sans:"Inter", system-ui, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:var(--sans);
+      background:
+        radial-gradient(circle at 16% 10%, rgba(194,106,255,0.18), transparent 24%),
+        radial-gradient(circle at 84% 14%, rgba(121,216,255,0.12), transparent 24%),
+        radial-gradient(circle at 50% 80%, rgba(255,120,190,0.10), transparent 26%),
+        linear-gradient(180deg, #080412 0%, #090513 24%, #070412 56%, #06030f 100%);
+      overflow-x:hidden;
+      min-height:100vh;
+    }
+    #sky{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+    .glow{ position:fixed; border-radius:999px; filter:blur(120px); pointer-events:none; z-index:0; opacity:.48; }
+    .g1{ width:38rem; height:38rem; top:-12rem; right:-10rem; background:radial-gradient(circle, rgba(194,106,255,.18), transparent 68%); animation:drift 22s ease-in-out infinite alternate; }
+    .g2{ width:30rem; height:30rem; left:-8rem; bottom:-10rem; background:radial-gradient(circle, rgba(121,216,255,.14), transparent 68%); animation:drift 27s ease-in-out infinite alternate-reverse; }
+    @keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,-16px) scale(1.08)}100%{transform:translate(-18px,22px) scale(.95)}}
+    @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    .wrap{ position:relative; z-index:1; width:min(1240px, calc(100% - 32px)); margin:0 auto; padding:18px 0 56px; }
+    .topbar{ position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 0; backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); background:linear-gradient(to bottom, rgba(8,4,18,.78), rgba(8,4,18,.18)); border-bottom:1px solid rgba(255,255,255,.04); }
+    .back{ color:var(--muted); text-decoration:none; display:inline-flex; align-items:center; gap:8px; letter-spacing:.16rem; text-transform:uppercase; font-size:.72rem; }
+    .back::before{ content:"←"; }
+    .brand{ font-family:var(--serif); font-size:1rem; letter-spacing:.28rem; text-transform:uppercase; color:var(--text); opacity:.9; }
+    .arrow-row{ display:flex; gap:8px; }
+    .icon-btn{ width:38px; height:38px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,.045); color:var(--text); cursor:pointer; font-size:1rem; transition:transform .24s ease, background .24s ease, border-color .24s ease; }
+    .icon-btn:hover{ transform:translateY(-1px); background:rgba(255,255,255,.08); border-color:rgba(203,166,255,.34); }
+
+    .hero{ text-align:center; padding:32px 0 12px; animation:rise 1s cubic-bezier(.22,1,.36,1) both; }
+    .eyebrow{ color:rgba(236,224,255,.5); font-size:.70rem; letter-spacing:.34rem; text-transform:uppercase; margin-bottom:12px; }
+    h1{ margin:0; font-family:var(--serif); font-weight:400; line-height:1; font-size:clamp(2.7rem, 6vw, 4.8rem); letter-spacing:.08rem; background:linear-gradient(135deg, #ffffff 0%, #f2d8ff 20%, #8be1ff 46%, #ff9bce 74%, #ffe0ba 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero p{ max-width:760px; margin:14px auto 0; color:var(--muted); font-family:var(--serif); font-style:italic; line-height:1.8; font-size:1.08rem; }
+
+    .filters{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; padding:24px 0 18px; animation:rise 1s .14s cubic-bezier(.22,1,.36,1) both; }
+    .chip{ appearance:none; border:1px solid var(--border); background:rgba(255,255,255,.045); color:var(--muted); border-radius:999px; min-height:42px; padding:0 16px; cursor:pointer; font-size:.78rem; letter-spacing:.06rem; transition:transform .24s ease, background .24s ease, border-color .24s ease, color .24s ease; }
+    .chip:hover{ transform:translateY(-1px); background:rgba(255,255,255,.07); color:var(--text); border-color:rgba(203,166,255,.32); }
+    .chip.is-active{ color:var(--text); border-color:rgba(203,166,255,.46); background:linear-gradient(135deg, rgba(194,106,255,.18), rgba(121,216,255,.12)); box-shadow:0 0 26px rgba(194,106,255,.12); }
+
+    .shell{ display:grid; grid-template-columns:minmax(0, 1.45fr) minmax(300px, .78fr); gap:20px; align-items:start; margin-top:6px; }
+    .glass{ background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03)); border:1px solid var(--border); border-radius:28px; box-shadow:0 24px 80px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.04); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+
+    .viewer{ overflow:hidden; animation:rise 1s .18s cubic-bezier(.22,1,.36,1) both; }
+    .viewer-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:18px; padding:24px 24px 18px; border-bottom:1px solid rgba(255,255,255,.05); }
+    .viewer-kicker{ color:rgba(236,224,255,.5); font-size:.70rem; letter-spacing:.22rem; text-transform:uppercase; margin-bottom:8px; }
+    .viewer-title{ margin:0; font-family:var(--serif); font-size:2rem; font-weight:500; line-height:1; letter-spacing:.03rem; }
+    .viewer-subtitle{ margin-top:6px; color:#a8e7ff; font-size:.82rem; letter-spacing:.08rem; text-transform:uppercase; }
+    .viewer-desc{ margin-top:10px; color:var(--muted); line-height:1.8; font-size:.95rem; max-width:680px; }
+    .viewer-meta{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+    .meta{ border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.045); color:rgba(242,236,255,.74); border-radius:999px; padding:7px 11px; font-size:.68rem; letter-spacing:.06rem; }
+    .canvas-wrap{ position:relative; height:clamp(340px, 54vw, 620px); background:linear-gradient(180deg, rgba(7,4,18,.36), rgba(7,4,18,.72)); cursor:crosshair; overflow:hidden; }
+    #model-canvas{ display:block; width:100%; height:100%; }
+    .canvas-label{ position:absolute; left:16px; bottom:14px; color:rgba(236,224,255,.35); font-size:.72rem; letter-spacing:.12rem; text-transform:uppercase; pointer-events:none; }
+    .fs{ position:absolute; top:14px; right:14px; z-index:3; }
+
+    .sidebar{ padding:16px; animation:rise 1s .22s cubic-bezier(.22,1,.36,1) both; }
+    .sidebar-title{ padding:8px 10px 14px; color:rgba(236,224,255,.56); font-size:.72rem; letter-spacing:.24rem; text-transform:uppercase; }
+    .thumbs{ display:grid; grid-template-columns:1fr; gap:10px; max-height:760px; overflow:auto; padding-right:2px; }
+    .thumb{ text-align:left; border:1px solid var(--border); background:rgba(255,255,255,.045); color:var(--text); border-radius:18px; padding:14px; cursor:pointer; transition:transform .24s ease, background .24s ease, border-color .24s ease, box-shadow .24s ease; }
+    .thumb:hover{ transform:translateY(-1px); background:rgba(255,255,255,.07); border-color:rgba(203,166,255,.28); }
+    .thumb.is-active{ background:linear-gradient(135deg, rgba(194,106,255,.18), rgba(121,216,255,.12)); border-color:rgba(203,166,255,.42); box-shadow:0 0 24px rgba(194,106,255,.12); }
+    .thumb-top{ display:flex; align-items:center; gap:12px; }
+    .thumb-icon{ width:42px; height:42px; border-radius:14px; display:grid; place-items:center; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.06); font-size:1.2rem; flex:0 0 auto; }
+    .thumb-title{ font-family:var(--serif); font-size:1.2rem; line-height:1; margin-bottom:3px; }
+    .thumb-sub{ color:#a8e7ff; font-size:.68rem; letter-spacing:.12rem; text-transform:uppercase; }
+    .thumb-desc{ margin-top:10px; color:var(--muted); font-size:.86rem; line-height:1.6; }
+    .footer{ text-align:center; padding:24px 0 6px; color:rgba(236,224,255,.42); font-size:.74rem; letter-spacing:.20rem; text-transform:uppercase; }
+
+    body.is-fullscreen .wrap{ width:100%; padding:0; }
+    body.is-fullscreen .topbar, body.is-fullscreen .hero, body.is-fullscreen .filters, body.is-fullscreen .sidebar, body.is-fullscreen .footer{ display:none; }
+    body.is-fullscreen .shell{ display:block; margin:0; }
+    body.is-fullscreen .viewer{ border:none; border-radius:0; box-shadow:none; background:#06030f; }
+    body.is-fullscreen .viewer-head{ display:none; }
+    body.is-fullscreen .canvas-wrap{ height:100vh; border-radius:0; }
+
+    @media (max-width: 980px){ .shell{ grid-template-columns:1fr; } .thumbs{ grid-template-columns:1fr 1fr; } }
+    @media (max-width: 640px){ .wrap{ width:min(1240px, calc(100% - 22px)); } .brand{ display:none; } .viewer-head{ padding:20px 18px 16px; } .sidebar{ padding:12px; } .thumbs{ grid-template-columns:1fr; } .canvas-wrap{ height:clamp(320px, 68vw, 520px); } }
+  </style>
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="glow g1" aria-hidden="true"></div>
+  <div class="glow g2" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <a class="back" href="index.html">Back to portfolio</a>
+      <div class="brand">Nova Crystal Gallery</div>
+      <div class="arrow-row">
+        <button class="icon-btn" id="prevBtn" aria-label="Previous model">‹</button>
+        <button class="icon-btn" id="nextBtn" aria-label="Next model">›</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="eyebrow">Interactive Science Models</div>
+      <h1>Crystalline Simulation Gallery</h1>
+      <p>A portfolio-ready display system for motion, recursion, instability, and orbit — designed to make technical imagination feel ceremonial.</p>
+    </div>
+
+    <div class="filters" id="filters"></div>
+
+    <div class="shell">
+      <section class="glass viewer">
+        <div class="viewer-head">
+          <div>
+            <div class="viewer-kicker" id="viewerCategory">Physics</div>
+            <h2 class="viewer-title" id="viewerTitle">Solar System</h2>
+            <div class="viewer-subtitle" id="viewerSubtitle">Orbital Mechanics</div>
+            <div class="viewer-desc" id="viewerDesc"></div>
+            <div class="viewer-meta" id="viewerMeta"></div>
+          </div>
+          <button class="icon-btn" id="fsBtn" title="Toggle fullscreen">⛶</button>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="model-canvas"></canvas>
+          <div class="canvas-label" id="canvasLabel">Drag your attention across the field.</div>
+        </div>
+      </section>
+
+      <aside class="glass sidebar">
+        <div class="sidebar-title">Model Library</div>
+        <div class="thumbs" id="thumbs"></div>
+      </aside>
+    </div>
+
+    <div class="footer">Nova Crystal Gallery · © Nova 猫猫 · interactive portfolio draft</div>
+  </div>
+
+  <script>
+    const MODELS = [
+      {id:'solar',icon:'☀',title:'Solar System',subtitle:'Orbital Mechanics',category:'Universe',tags:['Orbit','Astronomy','Motion'],label:'Planets drift inside a crystalline orbital frame.',desc:'A stylized solar system showing planetary rhythm, atmospheric glow, and orbital distance as a moving spatial composition.',draw(ctx,w,h,state,t){const cx=w/2,cy=h/2,scale=Math.min(w,h)/620;const planets=[{r:50*scale,size:3*scale,color:'#bca89a',speed:4.15},{r:82*scale,size:5*scale,color:'#f8c989',speed:1.62},{r:118*scale,size:5.8*scale,color:'#66b7ff',speed:1},{r:154*scale,size:4.3*scale,color:'#f26f56',speed:.53},{r:210*scale,size:12*scale,color:'#efc28f',speed:.084},{r:268*scale,size:10*scale,color:'#f7d8a5',speed:.034,ring:true},{r:316*scale,size:7*scale,color:'#8ce5e2',speed:.012},{r:354*scale,size:6.5*scale,color:'#5d89ff',speed:.006}];ctx.clearRect(0,0,w,h);for(const p of planets){ctx.beginPath();ctx.arc(cx,cy,p.r,0,Math.PI*2);ctx.strokeStyle='rgba(180,120,255,.10)';ctx.lineWidth=1;ctx.stroke()}const sg=ctx.createRadialGradient(cx,cy,0,cx,cy,34*scale);sg.addColorStop(0,'rgba(255,255,255,1)');sg.addColorStop(.25,'rgba(255,225,164,.94)');sg.addColorStop(1,'rgba(255,176,68,0)');ctx.beginPath();ctx.arc(cx,cy,34*scale,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.beginPath();ctx.arc(cx,cy,9*scale,0,Math.PI*2);ctx.fillStyle='#fff7d4';ctx.fill();for(const p of planets){const a=t*.0005*p.speed;const x=cx+Math.cos(a)*p.r;const y=cy+Math.sin(a)*p.r;if(p.ring){ctx.beginPath();ctx.ellipse(x,y,p.size*2.25,p.size*.62,a*.3,0,Math.PI*2);ctx.strokeStyle='rgba(255,222,167,.5)';ctx.lineWidth=2;ctx.stroke()}const glow=ctx.createRadialGradient(x,y,0,x,y,p.size*2.2);glow.addColorStop(0,p.color);glow.addColorStop(1,'rgba(0,0,0,0)');ctx.beginPath();ctx.arc(x,y,p.size*2.2,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();ctx.beginPath();ctx.arc(x,y,p.size,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill()}}},
+      {id:'earth',icon:'🌍',title:'Earth & Satellites',subtitle:'Low Earth Orbit',category:'Universe',tags:['Earth','Satellite','Atmosphere'],label:'Satellites circle through a calm luminous atmosphere.',desc:'A cinematic Earth visualization focused on low-earth orbit, atmospheric bloom, solar-panel silhouettes, and procedural satellite trails.',draw(ctx,w,h,state,t){const cx=w/2,cy=h/2,R=Math.min(w,h)*.18;if(!state.sats){state.sats=Array.from({length:7},(_,i)=>({r:R+28+i*23,speed:.45+Math.random()*1.3,phase:Math.random()*Math.PI*2,tilt:(Math.random()-.5)*.7,hue:245+i*17}))}ctx.clearRect(0,0,w,h);const earthGlow=ctx.createRadialGradient(cx,cy,R*.82,cx,cy,R*2);earthGlow.addColorStop(0,'rgba(100,168,255,.18)');earthGlow.addColorStop(1,'rgba(0,0,0,0)');ctx.beginPath();ctx.arc(cx,cy,R*2,0,Math.PI*2);ctx.fillStyle=earthGlow;ctx.fill();for(const s of state.sats){ctx.save();ctx.translate(cx,cy);ctx.rotate(s.tilt);ctx.beginPath();ctx.ellipse(0,0,s.r,s.r*.84,0,0,Math.PI*2);ctx.strokeStyle='rgba(181,122,255,.11)';ctx.lineWidth=1;ctx.stroke();const a=t*.001*s.speed+s.phase;const x=Math.cos(a)*s.r;const y=Math.sin(a)*s.r*.84;for(let i=1;i<=16;i++){const ta=a-i*.04;const tx=Math.cos(ta)*s.r;const ty=Math.sin(ta)*s.r*.84;ctx.beginPath();ctx.arc(tx,ty,.9+i*.01,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue}, 88%, 74%, ${Math.max(0,.24-i*.013)})`;ctx.fill()}ctx.beginPath();ctx.arc(x,y,3.2,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue}, 92%, 72%, .98)`;ctx.fill();ctx.fillStyle='rgba(122,214,255,.45)';ctx.fillRect(x-8,y-1.1,5,2.2);ctx.fillRect(x+3,y-1.1,5,2.2);ctx.restore()}const eg=ctx.createRadialGradient(cx-R*.35,cy-R*.35,0,cx,cy,R);eg.addColorStop(0,'#61b5ff');eg.addColorStop(.55,'#1b66b5');eg.addColorStop(1,'#102d61');ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=eg;ctx.fill();ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();const shift=(t*.006)%(R*2.6);[[cx-R*.55+shift-R*1.3,cy-R*.24,R*.28,R*.22,.4],[cx+R*.08+shift-R*1.3,cy+R*.08,R*.22,R*.35,-.15],[cx-R*.95+shift-R*1.3,cy-R*.06,R*.15,R*.18,.2],[cx+R*.56+shift-R*1.3,cy-R*.34,R*.21,R*.18,.1]].forEach(([x,y,rx,ry,rot])=>{ctx.beginPath();ctx.ellipse(x,y,rx,ry,rot,0,Math.PI*2);ctx.fillStyle='rgba(54,176,96,.40)';ctx.fill()});ctx.restore();const atm=ctx.createRadialGradient(cx,cy,R*.94,cx,cy,R*1.12);atm.addColorStop(0,'rgba(100,180,255,.16)');atm.addColorStop(1,'rgba(100,180,255,0)');ctx.beginPath();ctx.arc(cx,cy,R*1.12,0,Math.PI*2);ctx.fillStyle=atm;ctx.fill()}},
+      {id:'lorenz',icon:'∞',title:'Lorenz Attractor',subtitle:'Chaos Theory',category:'Chaos',tags:['Chaos','Dynamics','Attractor'],label:'A double-winged attractor slowly rotates through the dark.',desc:'A rotating Lorenz attractor showing nonlinear dynamics as a luminous particle sculpture suspended in space.',init(state){let x=.1,y=0,z=0;const dt=.005,sigma=10,rho=28,beta=8/3;state.points=[];for(let i=0;i<9000;i++){const dx=sigma*(y-x)*dt;const dy=(x*(rho-z)-y)*dt;const dz=(x*y-beta*z)*dt;x+=dx;y+=dy;z+=dz;state.points.push({x,y,z})}},draw(ctx,w,h,state,t){if(!state.points)this.init(state);ctx.fillStyle='rgba(7,4,18,.05)';ctx.fillRect(0,0,w,h);const rot=t*.00023;state.index=(state.index||0)+48;if(state.index>=state.points.length)state.index=0;for(let i=0;i<64;i++){const p=state.points[(state.index+i*5)%state.points.length];const rx=p.x*Math.cos(rot)-p.z*Math.sin(rot);const rz=p.x*Math.sin(rot)+p.z*Math.cos(rot);const sx=w/2+rx*7.1;const sy=h/2-p.y*7.1+rz*2.1;ctx.beginPath();ctx.arc(sx,sy,1.25,0,Math.PI*2);ctx.fillStyle=`hsla(${266+(i/64)*78}, 90%, 68%, .86)`;ctx.fill()}}},
+      {id:'quantum',icon:'ψ',title:'Quantum Interference',subtitle:'Double-Slit Field',category:'Quantum',tags:['Quantum','Wave','Interference'],label:'Probability bands ripple beyond a narrow barrier.',desc:'A canvas interpretation of double-slit interference, where two wave sources produce a shifting field of intensity bands.',draw(ctx,w,h,state,t){ctx.clearRect(0,0,w,h);const time=t*.002;for(let x=0;x<w;x+=2){for(let y=0;y<h;y+=2){const dx1=x-w*.38,dy1=y-h/2-34;const dx2=x-w*.38,dy2=y-h/2+34;const r1=Math.sqrt(dx1*dx1+dy1*dy1);const r2=Math.sqrt(dx2*dx2+dy2*dy2);const wave1=Math.sin(r1*.082-time*2)/(1+r1*.012);const wave2=Math.sin(r2*.082-time*2)/(1+r2*.012);const interference=wave1+wave2;const intensity=interference*interference;if(intensity>.018){const hue=275+intensity*68;const alpha=Math.min(.88,intensity*.64);ctx.fillStyle=`hsla(${hue}, 92%, 64%, ${alpha})`;ctx.fillRect(x,y,2,2)}}}ctx.fillStyle='rgba(126,85,178,.62)';ctx.fillRect(w*.38-2,0,4,h/2-44);ctx.fillRect(w*.38-2,h/2-18,4,36);ctx.fillRect(w*.38-2,h/2+44,4,h)}},
+      {id:'julia',icon:'✦',title:'Julia Set',subtitle:'Complex Dynamics',category:'Mathematics',tags:['Fractal','Complex Plane','Iteration'],label:'The boundary folds into itself again and again.',desc:'A slowly shifting Julia set with a living complex parameter, creating a fractal field that breathes over time.',draw(ctx,w,h,state,t){state.frame=(state.frame||0)+1;if(state.frame%2!==0)return;const time=t*.00035;const cr=-.72+Math.sin(time)*.16;const ci=.27+Math.cos(time*.7)*.08;const img=ctx.createImageData(w,h);const d=img.data;function hslToRgb(h,s,l){s/=100;l/=100;const c=(1-Math.abs(2*l-1))*s;const x=c*(1-Math.abs((h/60)%2-1));const m=l-c/2;let r=0,g=0,b=0;if(h<60){r=c;g=x}else if(h<120){r=x;g=c}else if(h<180){g=c;b=x}else if(h<240){g=x;b=c}else if(h<300){r=x;b=c}else{r=c;b=x}return[(r+m)*255,(g+m)*255,(b+m)*255]}for(let px=0;px<w;px+=2){for(let py=0;py<h;py+=2){let zr=(px-w/2)/(w/3.4);let zi=(py-h/2)/(h/3.4);let iter=0;const maxIter=56;while(zr*zr+zi*zi<4&&iter<maxIter){const tmp=zr*zr-zi*zi+cr;zi=2*zr*zi+ci;zr=tmp;iter++}if(iter<maxIter){const hue=(iter/maxIter)*360+240;const light=28+(iter/maxIter)*50;const [r,g,b]=hslToRgb(hue%360,82,light);for(let dx=0;dx<2;dx++){for(let dy=0;dy<2;dy++){const i=((py+dy)*w+(px+dx))*4;d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}}}}ctx.putImageData(img,0,0)}},
+      {id:'spring',icon:'⚡',title:'Spring System',subtitle:'Responsive Elastic Network',category:'Physics',tags:['Elasticity','Hooke','Interaction'],label:'Move the pointer to disturb the chain of masses.',desc:'A spring-mass chain that reacts to the cursor, demonstrating elastic recovery, local disturbance, and procedural drawing.',init(state,w,h){state.points=Array.from({length:12},(_,i)=>({x:w/2,y:54+i*32,vx:0,vy:0}));state.pointer={x:w/2,y:h/2}},draw(ctx,w,h,state,t,pointer){if(!state.points)this.init(state,w,h);state.pointer=pointer||state.pointer;ctx.clearRect(0,0,w,h);const time=t*.003;state.points.forEach((p,i)=>{const tx=w/2+Math.sin(time+i*.48)*42;const ty=54+i*32+Math.cos(time*.72+i*.3)*14;const dx=p.x-state.pointer.x;const dy=p.y-state.pointer.y;const dist=Math.sqrt(dx*dx+dy*dy);if(dist<110){const f=(1-dist/110)*2.6;p.vx+=(dx/(dist||1))*f;p.vy+=(dy/(dist||1))*f}p.vx+=(tx-p.x)*.03;p.vy+=(ty-p.y)*.03;p.vx*=.92;p.vy*=.92;p.x+=p.vx;p.y+=p.vy});for(let i=0;i<state.points.length-1;i++){const a=state.points[i];const b=state.points[i+1];const dist=Math.hypot(a.x-b.x,a.y-b.y);const tension=Math.min(dist/50,1);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(${160+tension*90}, ${80-tension*40}, 255, .65)`;ctx.lineWidth=2-tension;ctx.stroke();ctx.beginPath();const steps=8;for(let s=0;s<=steps;s++){const tt=s/steps;const mx=a.x+(b.x-a.x)*tt+Math.sin(tt*Math.PI*4)*(10-tension*8);const my=a.y+(b.y-a.y)*tt;if(s===0)ctx.moveTo(mx,my);else ctx.lineTo(mx,my)}ctx.strokeStyle='rgba(194,106,255,.32)';ctx.lineWidth=1;ctx.stroke()}state.points.forEach(p=>{const glow=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,14);glow.addColorStop(0,'rgba(194,106,255,.85)');glow.addColorStop(1,'rgba(194,106,255,0)');ctx.beginPath();ctx.arc(p.x,p.y,14,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();ctx.beginPath();ctx.arc(p.x,p.y,4.2,0,Math.PI*2);ctx.fillStyle='#e8bfff';ctx.fill()})}},
+      {id:'pendulum',icon:'◎',title:'Pendulum Wave',subtitle:'Phase Synchronization',category:'Physics',tags:['Synchronization','Wave','Rhythm'],label:'Many pendulums drift in and out of phase.',desc:'A pendulum-wave array revealing phase synchronization and slow emergent patterning across slightly different oscillation frequencies.',init(state,w){state.pends=Array.from({length:20},(_,i)=>({freq:.8+i*.04,length:60+i*9,x:34+(i*(w-68))/20}))},draw(ctx,w,h,state,t){if(!state.pends)this.init(state,w);ctx.fillStyle='rgba(7,4,18,.14)';ctx.fillRect(0,0,w,h);ctx.beginPath();ctx.moveTo(18,34);ctx.lineTo(w-18,34);ctx.strokeStyle='rgba(181,122,255,.36)';ctx.lineWidth=2;ctx.stroke();const time=t*.001;state.pends.forEach((p,i)=>{const angle=Math.sin(time*p.freq)*.82;const bx=p.x+Math.sin(angle)*p.length;const by=34+Math.cos(angle)*p.length;ctx.beginPath();ctx.moveTo(p.x,34);ctx.lineTo(bx,by);ctx.strokeStyle='rgba(181,122,255,.28)';ctx.lineWidth=1;ctx.stroke();const hue=260+(i/state.pends.length)*72;const glow=ctx.createRadialGradient(bx,by,0,bx,by,15);glow.addColorStop(0,`hsla(${hue}, 88%, 68%, .6)`);glow.addColorStop(1,`hsla(${hue}, 88%, 68%, 0)`);ctx.beginPath();ctx.arc(bx,by,15,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();ctx.beginPath();ctx.arc(bx,by,5.1,0,Math.PI*2);ctx.fillStyle=`hsla(${hue}, 90%, 72%, .98)`;ctx.fill()})}},
+      {id:'gravity',icon:'◉',title:'Particle Gravity',subtitle:'N-Body Field',category:'Chaos',tags:['Gravity','Particles','Field'],label:'Particles spiral toward a bright central mass.',desc:'A particle field under gravitational pull, balancing drift, attraction, and radial glow in a dark chamber.',init(state,w,h){const cx=w/2,cy=h/2;state.particles=Array.from({length:220},()=>{const a=Math.random()*Math.PI*2;const d=48+Math.random()*180;return{x:cx+Math.cos(a)*d,y:cy+Math.sin(a)*d,vx:Math.sin(a)*1.5,vy:-Math.cos(a)*1.5,hue:245+Math.random()*90}})},draw(ctx,w,h,state){if(!state.particles)this.init(state,w,h);const cx=w/2,cy=h/2;ctx.fillStyle='rgba(7,4,18,.08)';ctx.fillRect(0,0,w,h);state.particles.forEach(p=>{const dx=cx-p.x,dy=cy-p.y;const dist=Math.sqrt(dx*dx+dy*dy)+5;const force=82/(dist*dist);p.vx+=(dx/dist)*force;p.vy+=(dy/dist)*force;p.vx*=.999;p.vy*=.999;p.x+=p.vx;p.y+=p.vy;ctx.beginPath();ctx.arc(p.x,p.y,1.25,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue}, 88%, 68%, .9)`;ctx.fill()});const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,22);cg.addColorStop(0,'rgba(214,168,255,.6)');cg.addColorStop(1,'rgba(214,168,255,0)');ctx.beginPath();ctx.arc(cx,cy,22,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill()}}
+    ];
+
+    const FILTERS=[{id:'all',label:'All Models'},{id:'Universe',label:'Universe'},{id:'Physics',label:'Physics'},{id:'Chaos',label:'Chaos'},{id:'Quantum',label:'Quantum'},{id:'Mathematics',label:'Mathematics'}];
+    const els={filters:document.getElementById('filters'),thumbs:document.getElementById('thumbs'),viewerCategory:document.getElementById('viewerCategory'),viewerTitle:document.getElementById('viewerTitle'),viewerSubtitle:document.getElementById('viewerSubtitle'),viewerDesc:document.getElementById('viewerDesc'),viewerMeta:document.getElementById('viewerMeta'),canvas:document.getElementById('model-canvas'),canvasLabel:document.getElementById('canvasLabel'),prevBtn:document.getElementById('prevBtn'),nextBtn:document.getElementById('nextBtn'),fsBtn:document.getElementById('fsBtn')};
+    let activeFilter='all';
+    let activeId=getInitialModelId();
+    let activeModel=MODELS.find(m=>m.id===activeId)||MODELS[0];
+    let activeState={};
+    let pointer={x:99999,y:99999};
+    const ctx=els.canvas.getContext('2d');
+
+    function getInitialModelId(){const url=new URL(window.location.href);const qp=url.searchParams.get('model');const hash=window.location.hash.replace('#','');return MODELS.some(m=>m.id===qp)?qp:MODELS.some(m=>m.id===hash)?hash:'solar'}
+    function resizeCanvas(){const rect=els.canvas.getBoundingClientRect();const ratio=Math.min(window.devicePixelRatio||1,2);els.canvas.width=Math.max(320,rect.width*ratio);els.canvas.height=Math.max(240,rect.height*ratio);ctx.setTransform(1,0,0,1,0,0);ctx.scale(ratio,ratio)}
+
+    function starfield(){const canvas=document.getElementById('sky');const sctx=canvas.getContext('2d');let w=0,h=0;const stars=Array.from({length:210},()=>({x:Math.random()*2400,y:Math.random()*2400,r:Math.random()*1.3+.25,speed:Math.random()*.35+.06,phase:Math.random()*Math.PI*2,hue:[285,198,330,40][Math.floor(Math.random()*4)]}));function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}resize();window.addEventListener('resize',resize);function draw(t){sctx.clearRect(0,0,w,h);for(const star of stars){const a=.25+.75*Math.sin(t*.001*star.speed+star.phase);sctx.beginPath();sctx.arc(star.x%w,star.y%h,star.r,0,Math.PI*2);sctx.fillStyle=`hsla(${star.hue}, 90%, 84%, ${Math.max(.1,a)})`;sctx.shadowBlur=10;sctx.shadowColor=`hsla(${star.hue}, 100%, 82%, .32)`;sctx.fill()}sctx.shadowBlur=0;requestAnimationFrame(draw)}requestAnimationFrame(draw)}
+    function renderFilters(){els.filters.innerHTML='';FILTERS.forEach(filter=>{const button=document.createElement('button');button.className='chip'+(filter.id===activeFilter?' is-active':'');button.textContent=filter.label;button.addEventListener('click',()=>{activeFilter=filter.id;renderFilters();renderThumbs()});els.filters.appendChild(button)})}
+    function filteredModels(){return activeFilter==='all'?MODELS:MODELS.filter(m=>m.category===activeFilter)}
+    function renderThumbs(){const list=filteredModels();if(!list.some(m=>m.id===activeModel.id)){activeModel=list[0]||MODELS[0];activeState={};updateViewerInfo()}els.thumbs.innerHTML='';list.forEach(model=>{const btn=document.createElement('button');btn.className='thumb'+(model.id===activeModel.id?' is-active':'');btn.innerHTML=`<div class="thumb-top"><div class="thumb-icon">${model.icon}</div><div><div class="thumb-title">${model.title}</div><div class="thumb-sub">${model.subtitle}</div></div></div><div class="thumb-desc">${model.desc}</div>`;btn.addEventListener('click',()=>setActiveModel(model.id));els.thumbs.appendChild(btn)})}
+    function updateViewerInfo(){els.viewerCategory.textContent=activeModel.category;els.viewerTitle.textContent=activeModel.title;els.viewerSubtitle.textContent=activeModel.subtitle;els.viewerDesc.textContent=activeModel.desc;els.canvasLabel.textContent=activeModel.label;els.viewerMeta.innerHTML='';activeModel.tags.forEach(tag=>{const span=document.createElement('span');span.className='meta';span.textContent=tag;els.viewerMeta.appendChild(span)});const url=new URL(window.location.href);url.searchParams.set('model',activeModel.id);history.replaceState({},'',url.pathname+url.search)}
+    function setActiveModel(id){const next=MODELS.find(m=>m.id===id);if(!next)return;activeModel=next;activeState={};updateViewerInfo();renderThumbs()}
+    function cycle(step){const list=filteredModels();const idx=list.findIndex(m=>m.id===activeModel.id);const next=(idx+step+list.length)%list.length;setActiveModel(list[next].id)}
+    function drawFrame(t){const rect=els.canvas.getBoundingClientRect();const w=rect.width,h=rect.height;activeModel.draw(ctx,w,h,activeState,t,pointer);requestAnimationFrame(drawFrame)}
+    function bindCanvasPointer(){const update=e=>{const rect=els.canvas.getBoundingClientRect();pointer.x=(e.clientX??e.touches?.[0]?.clientX??0)-rect.left;pointer.y=(e.clientY??e.touches?.[0]?.clientY??0)-rect.top};els.canvas.addEventListener('mousemove',update);els.canvas.addEventListener('touchmove',update,{passive:true});els.canvas.addEventListener('mouseleave',()=>{pointer.x=99999;pointer.y=99999})}
+    function toggleFullscreen(){document.body.classList.toggle('is-fullscreen');requestAnimationFrame(()=>resizeCanvas())}
+    function init(){starfield();renderFilters();renderThumbs();resizeCanvas();updateViewerInfo();bindCanvasPointer();requestAnimationFrame(drawFrame);window.addEventListener('resize',()=>{resizeCanvas();activeState={}});els.prevBtn.addEventListener('click',()=>cycle(-1));els.nextBtn.addEventListener('click',()=>cycle(1));els.fsBtn.addEventListener('click',toggleFullscreen);document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')cycle(-1);if(e.key==='ArrowRight')cycle(1);if(e.key.toLowerCase()==='f')toggleFullscreen();if(e.key==='Escape'&&document.body.classList.contains('is-fullscreen'))toggleFullscreen()})}
+    init();
+  </script>
+</body>
+</html>
