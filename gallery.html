@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星晶美学实验室 | Nova Crystal Gallery</title>
+<meta name="description" content="8 interactive science visualizations — Solar System, Lorenz Attractor, Quantum Interference, Julia Fractal and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070411;
+  --rose:#ff70b8;
+  --lavender:#c060ff;
+  --cyan:#60d0ff;
+  --gold:#ffd0a0;
+  --pearl:#f0e8ff;
+  --dim:rgba(200,180,240,0.45);
+  --glass:rgba(140,80,220,0.06);
+  --glass-border:rgba(180,120,255,0.15);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Quicksand','Helvetica Neue',Arial,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--pearl);font-family:var(--sans);overflow-x:hidden;min-height:100vh;position:relative}
+
+/* ══ BG Canvas ══ */
+#bg-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.aurora{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:0.45}
+.au1{width:550px;height:550px;top:-160px;right:-100px;background:radial-gradient(circle,rgba(120,40,180,0.18),transparent 70%);animation:ad 22s ease-in-out infinite alternate}
+.au2{width:450px;height:450px;bottom:-120px;left:-80px;background:radial-gradient(circle,rgba(40,100,200,0.14),transparent 70%);animation:ad 28s ease-in-out infinite alternate-reverse}
+@keyframes ad{0%{transform:translate(0,0) scale(1)}50%{transform:translate(25px,-18px) scale(1.08)}100%{transform:translate(-18px,25px) scale(0.94)}}
+
+/* ══ Top Bar ══ */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:linear-gradient(to bottom,rgba(7,4,17,0.92),transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 0.4s}
+.back-link{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:2px;display:flex;align-items:center;gap:8px;transition:color 0.3s}
+.back-link:hover{color:var(--pearl)}
+.back-link::before{content:'←';font-size:14px}
+.top-title{font-family:var(--serif);font-size:14px;font-weight:300;letter-spacing:4px;color:rgba(200,180,240,0.6)}
+.nav-arrows{display:flex;gap:10px}
+.nav-arrows button{background:var(--glass);border:1px solid var(--glass-border);color:var(--dim);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+.nav-arrows button:hover{border-color:rgba(180,120,255,0.4);color:var(--pearl);background:rgba(140,80,220,0.12)}
+
+/* ══ Main Layout ══ */
+.main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:80px 24px 40px}
+
+/* ══ Header ══ */
+.gallery-header{text-align:center;padding:24px 0 20px;opacity:0;animation:fu .9s .2s forwards}
+.gallery-header h1{font-family:var(--serif);font-size:clamp(28px,5vw,48px);font-weight:300;letter-spacing:3px;background:linear-gradient(135deg,#e0c0ff 0%,#80d0ff 40%,#ff90c8 70%,#ffd0a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.gallery-header p{font-size:13px;color:var(--dim);font-style:italic;font-family:var(--serif);letter-spacing:2px}
+.header-line{width:50px;height:1px;background:linear-gradient(90deg,transparent,rgba(180,120,255,0.5),transparent);margin:16px auto 0}
+
+/* ══ Filter Tabs ══ */
+.filter-bar{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;padding:20px 0 28px;opacity:0;animation:fu .9s .35s forwards}
+.filter-btn{background:var(--glass);border:1px solid var(--glass-border);color:var(--dim);padding:8px 18px;border-radius:24px;cursor:pointer;font-family:var(--sans);font-size:12px;letter-spacing:1.5px;transition:all 0.4s cubic-bezier(0.23,1,0.32,1);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.filter-btn .icon{font-size:16px}
+.filter-btn:hover{border-color:rgba(180,120,255,0.35);color:var(--pearl);background:rgba(140,80,220,0.1)}
+.filter-btn.active{background:linear-gradient(135deg,rgba(180,80,255,0.18),rgba(80,200,255,0.12));border-color:rgba(180,120,255,0.5);color:var(--pearl);box-shadow:0 0 24px rgba(160,80,255,0.12),inset 0 0 16px rgba(160,80,255,0.05)}
+
+/* ══ Model Display ══ */
+.display-section{opacity:0;animation:fu .9s .5s forwards}
+.display-card{background:linear-gradient(135deg,rgba(120,50,180,0.05),rgba(60,100,180,0.03));border:1px solid var(--glass-border);border-radius:24px;overflow:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 0 50px rgba(120,50,200,0.06),inset 0 0 24px rgba(120,50,200,0.03);transition:border-color 0.5s}
+.display-card:hover{border-color:rgba(180,120,255,0.3)}
+.display-info{display:flex;align-items:center;gap:14px;padding:20px 28px;border-bottom:1px solid rgba(150,100,220,0.08)}
+.display-icon{font-size:30px}
+.display-meta h2{font-family:var(--serif);font-size:22px;font-weight:400;letter-spacing:1px;margin-bottom:2px}
+.display-meta .sub{font-size:12px;color:var(--cyan);font-family:monospace;letter-spacing:0.5px}
+.display-meta .desc{font-size:11px;color:var(--dim);margin-top:4px}
+.canvas-wrap{position:relative;width:100%;height:clamp(320px,50vw,520px);background:rgba(4,2,12,0.6);cursor:crosshair}
+.canvas-wrap canvas{display:block;width:100%;height:100%}
+.canvas-label{position:absolute;bottom:12px;left:16px;font-size:10px;color:rgba(200,180,240,0.35);font-family:monospace;letter-spacing:1px;pointer-events:none}
+
+/* ══ Model Grid (thumbnails) ══ */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px;padding:28px 0 0}
+.model-thumb{background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:14px 12px;cursor:pointer;text-align:left;transition:all 0.4s cubic-bezier(0.23,1,0.32,1)}
+.model-thumb:hover{border-color:rgba(180,120,255,0.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(100,40,200,0.1)}
+.model-thumb.active{background:linear-gradient(135deg,rgba(180,80,255,0.16),rgba(80,200,255,0.1));border-color:rgba(180,120,255,0.45);box-shadow:0 0 28px rgba(160,80,255,0.12),inset 0 0 14px rgba(160,80,255,0.04);transform:scale(1.03)}
+.thumb-icon{font-size:22px;margin-bottom:6px}
+.thumb-title{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--pearl);letter-spacing:0.5px;margin-bottom:2px}
+.thumb-sub{font-size:10px;color:var(--lavender);font-family:monospace}
+.thumb-desc{font-size:9px;color:var(--dim);margin-top:4px}
+
+/* ══ Footer ══ */
+.gallery-footer{text-align:center;padding:40px 0 50px;margin-top:20px;border-top:1px solid rgba(150,100,220,0.06)}
+.gallery-footer span{font-size:10px;color:rgba(200,180,240,0.2);letter-spacing:2px}
+
+/* ══ Keyframes ══ */
+@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ Fullscreen Mode ══ */
+.canvas-wrap .fs-btn{position:absolute;top:12px;right:12px;background:rgba(20,10,40,0.6);border:1px solid rgba(150,100,220,0.2);color:var(--dim);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.3s;z-index:2}
+.canvas-wrap .fs-btn:hover{background:rgba(140,80,220,0.15);color:var(--pearl);border-color:rgba(180,120,255,0.4)}
+body.fullscreen-active .main{padding-top:0}
+body.fullscreen-active .top-bar,
+body.fullscreen-active .gallery-header,
+body.fullscreen-active .filter-bar,
+body.fullscreen-active .model-grid,
+body.fullscreen-active .display-info,
+body.fullscreen-active .gallery-footer{display:none}
+body.fullscreen-active .display-card{border:none;border-radius:0;position:fixed;inset:0;z-index:200;background:var(--bg)}
+body.fullscreen-active .canvas-wrap{height:100vh}
+
+/* ══ Responsive ══ */
+@media(max-width:768px){
+  .top-bar{padding:14px 16px}
+  .top-title{display:none}
+  .main{padding:70px 16px 30px}
+  .display-info{padding:16px 20px}
+  .model-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+}
+@media(max-width:480px){
+  .filter-bar{gap:6px}
+  .filter-btn{padding:6px 12px;font-size:11px}
+  .nav-arrows{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="aurora au1"></div>
+<div class="aurora au2"></div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="index.html" class="back-link">Nova Crystal</a>
+  <span class="top-title">星晶美学实验室</span>
+  <div class="nav-arrows">
+    <button id="btn-prev" title="Previous model">‹</button>
+    <button id="btn-next" title="Next model">›</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Header -->
+  <div class="gallery-header">
+    <h1>星晶美学实验室</h1>
+    <p>Interactive Science Models — by Nova 猫猫</p>
+    <div class="header-line"></div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-bar" id="filter-bar">
+    <!-- JS will populate -->
+  </div>
+
+  <!-- Active Model Display -->
+  <div class="display-section">
+    <div class="display-card" id="display-card">
+      <div class="display-info" id="display-info">
+        <span class="display-icon" id="display-icon"></span>
+        <div class="display-meta">
+          <h2 id="display-title"></h2>
+          <div class="sub" id="display-sub"></div>
+          <div class="desc" id="display-desc"></div>
+        </div>
+      </div>
+      <div class="canvas-wrap" id="canvas-wrap">
+        <canvas id="model-canvas"></canvas>
+        <div class="canvas-label" id="canvas-label"></div>
+        <button class="fs-btn" id="fs-btn" title="Toggle fullscreen">⛶</button>
+      </div>
+    </div>
+
+    <!-- Thumbnail Grid -->
+    <div class="model-grid" id="model-grid">
+      <!-- JS will populate -->
+    </div>
+  </div>
+
+  <div class="gallery-footer">
+    <span>© 2026 Nova 猫猫 · NOVA CRYSTAL · 星晶美学</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- JS: Step 1 skeleton — model data & render logic added in Step 2 -->
+<!-- ══════════════════════════════════════ -->
+<script>
+/* ── Starfield BG (shared with index) ── */
+(function(){
+  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d'),stars=[],W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  for(var i=0;i<180;i++)stars.push({x:Math.random()*3000,y:Math.random()*3000,r:Math.random()*1.3+0.3,sp:Math.random()*0.3+0.1,ph:Math.random()*Math.PI*2,col:['rgba(230,210,255,','rgba(180,220,255,','rgba(255,180,220,'][Math.floor(Math.random()*3)]});
+  (function draw(t){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<stars.length;i++){var s=stars[i],a=0.3+0.65*Math.sin(t*0.001*s.sp+s.ph);ctx.beginPath();ctx.arc(s.x%W,s.y%H,s.r,0,Math.PI*2);ctx.fillStyle=s.col+a+')';ctx.fill()}
+    requestAnimationFrame(draw);
+  })(0);
+})();
+
+/* ── Model data, render, drawing functions — to be added ── */
+/* STEP 2 and STEP 3 code goes here */
+</script>
+</body>
+</html>
