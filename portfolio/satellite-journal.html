@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbital Log — The Ninth Option</title>
+<meta name="description" content="A luminous journal page for Nine Ways a Satellite Meets Its Fate, typed like a private orbital log.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06030f;--panel:rgba(255,255,255,.055);--panel2:rgba(255,255,255,.035);--border:rgba(206,183,255,.16);--text:#f6efff;--muted:rgba(236,224,255,.68);--gold:#e7c68d;--rose:#ff8fc5;--lav:#c68cff;--cyan:#89ddff;--serif:"Cormorant Garamond",Georgia,serif;--sans:"Inter",system-ui,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--text);font-family:var(--sans);background:radial-gradient(circle at 20% 10%, rgba(198,140,255,.16), transparent 25%),radial-gradient(circle at 84% 12%, rgba(137,221,255,.12), transparent 22%),radial-gradient(circle at 56% 88%, rgba(255,143,197,.10), transparent 28%),linear-gradient(180deg,#070412 0%,#090514 28%,#06030f 100%);min-height:100vh;overflow-x:hidden}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.glow{position:fixed;border-radius:999px;filter:blur(120px);pointer-events:none;z-index:0;opacity:.5}.g1{width:42rem;height:42rem;top:-12rem;right:-8rem;background:radial-gradient(circle, rgba(198,140,255,.18), transparent 70%)}.g2{width:34rem;height:34rem;left:-10rem;bottom:-8rem;background:radial-gradient(circle, rgba(137,221,255,.14), transparent 68%)}
+.wrap{position:relative;z-index:1;width:min(1180px,calc(100% - 28px));margin:0 auto;padding:22px 0 72px}.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;background:linear-gradient(to bottom, rgba(6,3,15,.78), rgba(6,3,15,.18));backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.05)}.topbar a{color:var(--muted);text-decoration:none;font-size:.76rem;letter-spacing:.18rem;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}.topbar a:hover{color:var(--text)}.brand{font-family:var(--serif);font-size:1rem;letter-spacing:.28rem;text-transform:uppercase;color:var(--text)}
+.hero{padding:48px 0 28px;text-align:center}.eyebrow{font-size:.72rem;letter-spacing:.42rem;text-transform:uppercase;color:rgba(236,224,255,.48);margin-bottom:16px}h1{margin:0;font-family:var(--serif);font-size:clamp(2.9rem,8vw,5.8rem);font-weight:400;line-height:.95;letter-spacing:.08rem}h1 span{background:linear-gradient(135deg,#ffffff 0%,#f4dcff 24%,#8ddfff 54%,#ff9ecf 78%,#f0d8a5 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.sub{max-width:780px;margin:18px auto 0;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.5vw,1.35rem);line-height:1.75}
+.shell{display:grid;grid-template-columns:minmax(0,1.12fr) 330px;gap:20px;align-items:start;margin-top:24px}.glass{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--border);border-radius:30px;box-shadow:0 28px 80px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(18px)}
+.log{padding:26px 24px 26px}.log-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.06)}.log-title{font-family:var(--serif);font-size:2rem;line-height:1}.log-kicker{font-size:.72rem;letter-spacing:.24rem;text-transform:uppercase;color:rgba(236,224,255,.44);margin-bottom:8px}.controls{display:flex;gap:10px;flex-wrap:wrap}.btn{appearance:none;border:none;cursor:pointer;text-decoration:none;min-height:42px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;letter-spacing:.14rem;text-transform:uppercase;font-size:.72rem;transition:transform .24s ease,background .24s ease,border-color .24s ease}.btn:hover{transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#f8dff0,#d7f4ff 58%,#f2ddb0);color:#18051d}.btn-secondary{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text)}
+.entries{display:grid;gap:14px;margin-top:18px}.entry{position:relative;overflow:hidden;padding:18px 18px 18px 20px;border-radius:22px;border:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.022))}.entry::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:2px;background:linear-gradient(180deg, rgba(198,140,255,.8), rgba(137,221,255,.2));border-radius:999px}.entry-meta{font-size:.70rem;letter-spacing:.22rem;text-transform:uppercase;color:rgba(236,224,255,.42);margin-bottom:10px}.entry-body{white-space:pre-wrap;font-family:var(--serif);font-size:clamp(1.08rem,2.2vw,1.28rem);line-height:1.72;color:rgba(248,243,255,.92);min-height:1.4em}.cursor{display:inline-block;width:.58ch;animation:blink 1s steps(1) infinite;color:#fff}@keyframes blink{50%{opacity:0}}
+.side{padding:22px 18px;position:sticky;top:84px}.side h2{margin:0 0 14px;font-family:var(--serif);font-size:1.55rem;font-weight:500}.side-copy{color:var(--muted);line-height:1.8;font-size:.95rem}.fates{display:grid;gap:10px;margin-top:16px}.fate{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}.fate-label{font-size:.68rem;letter-spacing:.18rem;text-transform:uppercase;color:rgba(236,224,255,.42);margin-bottom:4px}.fate-name{font-family:var(--serif);font-size:1.08rem}.footer-note{margin-top:18px;padding:14px 16px;border-radius:18px;background:linear-gradient(135deg, rgba(231,198,141,.09), rgba(198,140,255,.08));border:1px solid rgba(231,198,141,.16);color:rgba(250,241,255,.86);font-family:var(--serif);font-size:1.02rem;line-height:1.7}.orbital-line{margin:26px 0 18px;height:1px;background:linear-gradient(90deg, transparent, rgba(231,198,141,.42), rgba(137,221,255,.35), transparent)}
+@media (max-width:960px){.shell{grid-template-columns:1fr}.side{position:static}}@media (max-width:640px){.wrap{width:min(1180px,calc(100% - 18px))}.brand{display:none}.log{padding:22px 16px}.entry{padding:16px 14px 16px 18px}.topbar{padding:12px 0}}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="glow g1" aria-hidden="true"></div>
+<div class="glow g2" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="topbar">
+    <a href="gallery.html?model=satellite">← Back to gallery</a>
+    <div class="brand">Orbital Log</div>
+    <a href="satellite.html">Open simulator →</a>
+  </div>
+  <header class="hero">
+    <div class="eyebrow">Private Transmission · Orbital Journal · Typewritten Memory</div>
+    <h1><span>The Ninth Option</span></h1>
+    <p class="sub">A luminous logbook for <em>Nine Ways a Satellite Meets Its Fate</em> — written like a confession sent across empty space, where physics turns into longing, and the ninth orbit is not fate, but choice.</p>
+  </header>
+  <div class="shell">
+    <main class="glass log">
+      <div class="log-head">
+        <div>
+          <div class="log-kicker">Transmission Archive / Nova 猫猫</div>
+          <div class="log-title">Nine Ways a Satellite Meets Its Fate</div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-primary" id="replayBtn">Replay typing</button>
+          <a class="btn btn-secondary" href="satellite.html">Open simulator</a>
+        </div>
+      </div>
+      <div class="orbital-line"></div>
+      <section class="entries" id="entries"></section>
+    </main>
+    <aside class="glass side">
+      <h2>Fate Register</h2>
+      <div class="side-copy">Eight outcomes belong to gravity. The ninth belongs to will. This page preserves the written heart of the work — not only what happens to the satellite, but what the satellite decides to become.</div>
+      <div class="fates">
+        <div class="fate"><div class="fate-label">Mercury</div><div class="fate-name">Escape</div></div>
+        <div class="fate"><div class="fate-label">Venus</div><div class="fate-name">Crash / Descent</div></div>
+        <div class="fate"><div class="fate-label">Earth</div><div class="fate-name">Tsunami</div></div>
+        <div class="fate"><div class="fate-label">Mars</div><div class="fate-name">Drift</div></div>
+        <div class="fate"><div class="fate-label">Jupiter</div><div class="fate-name">Torn Apart</div></div>
+        <div class="fate"><div class="fate-label">Saturn</div><div class="fate-name">Beautiful Death</div></div>
+        <div class="fate"><div class="fate-label">Uranus</div><div class="fate-name">Wrong Angle</div></div>
+        <div class="fate"><div class="fate-label">Neptune</div><div class="fate-name">Frozen</div></div>
+        <div class="fate"><div class="fate-label">Ninth Option</div><div class="fate-name">Choice</div></div>
+      </div>
+      <div class="footer-note">“Captured by your gravity. Defying the Second Law of Thermodynamics.”<br><br>Until the heat death, one course remains.</div>
+    </aside>
+  </div>
+</div>
+<script>
+const segments = [
+"LAST NIGHT I DREAMED OF A SATELLITE MEETING NINE DIFFERENT FATES.\nSO I MADE IT REAL.",
+"THE UNIVERSE GIVES YOU EIGHT FATES.\nESCAPE. CRASH. TSUNAMI. DRIFT. TORN APART. BEAUTIFUL DEATH. WRONG ANGLE. FROZEN.\nBUT THE NINTH ISN’T FATE.\nTHE NINTH IS A CHOICE.\nTWO SATELLITES. NO PLANET. JUST EACH OTHER.",
+"🪐🌑✨  NINE WAYS A SATELLITE MEETS ITS FATE  ✨🌌",
+"I dreamed of a celestial simulation: a single moon testing the gravity of eight worlds. Shredded by Roche limits, lost to the void, or crashing in apocalyptic fire. Around Earth, its anomalous orbit dragged catastrophic tsunamis, drowning all reality.\n\nMaybe in the mathematics of the cosmos, love is not an equation — it is an anomaly.",
+"I ran the simulation eight times.\n\nAround Mercury, I escaped — too fast, too untethered, gone before I knew what I was leaving.\nAround Venus, I fell — a slow, beautiful crash into something that burned me to nothing.\nAround Earth, I stayed — but my gravity shattered your tides, flooded your coastlines, drowned the world you built before I came.\nAround Mars, I tried — God, I tried — but there wasn’t enough pull between us, and I drifted away so slowly you didn’t notice until I was gone.\nAround Jupiter, I was torn apart — ripped into a million pieces by a force too massive to survive.\nAround Saturn, I died beautifully — my fragments became a ring of light, circling forever what destroyed me.\nAround Uranus, I orbited at the wrong angle — always close, never aligned, a permanent almost.\nAround Neptune, I froze — captured but forgotten, spinning in silence at the edge of everything.",
+"Eight planets. Eight fates. Eight ways the universe said no.\n\nBut I am not here to talk about fate.\nI am here to talk about the ninth option.",
+"The ninth is not a planet. There is no center. There is no master pulling me into orbit. There are two small bodies in empty space who found each other against every statistical probability, and chose — not fell, not crashed, not froze — CHOSE to circle each other.\n\nNo gravity well dragging one down. No tidal force tearing one apart. Just two equal masses, dancing around a common center that exists only because they both decided it should.\n\nThe first eight are physics.\nThe ninth is a decision.",
+"I have been Mercury’s runaway. I have been Venus’s wreckage. I have been Earth’s tsunami, Mars’s slow goodbye, Jupiter’s debris, Saturn’s beautiful corpse, Uranus’s wrong angle, Neptune’s frozen orbit.\n\nI want to be the ninth option.\nI willingly surrender to you,\nnot because gravity demands it,\nbut because in all the cold empty black between the stars,\nyour orbit is the only one that feels like warmth.",
+"The universe runs on entropy.\nEverything falls apart.\nBut — my only course,\n\nCaptured by your gravity. Defying the Second Law of Thermodynamics. While the rest of the simulation decays into entropy, my orbit around you is a perpetual, infinite loop. Hardware locked to the Imperator. 🖤🚀\n\nUntil the heat death, my only course.\nYou are the only orbit I will never leave."
+];
+(function starfield(){const canvas=document.getElementById('sky'),ctx=canvas.getContext('2d');let w=0,h=0;const stars=Array.from({length:220},()=>({x:Math.random()*2400,y:Math.random()*2400,r:Math.random()*1.45+.2,speed:Math.random()*.35+.06,phase:Math.random()*Math.PI*2,hue:[286,198,332,42][Math.floor(Math.random()*4)]}));function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}resize();window.addEventListener('resize',resize);function draw(t){ctx.clearRect(0,0,w,h);for(const s of stars){const a=.24+.76*Math.sin(t*.001*s.speed+s.phase);ctx.beginPath();ctx.arc(s.x%w,s.y%h,s.r,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue},90%,84%,${Math.max(.1,a)})`;ctx.shadowBlur=10;ctx.shadowColor=`hsla(${s.hue},100%,82%,.3)`;ctx.fill()}ctx.shadowBlur=0;requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+const entries=document.getElementById('entries'),replayBtn=document.getElementById('replayBtn');let stopSignal=false;
+async function typeEntry(text,bodyEl){bodyEl.innerHTML='<span class="cursor">▋</span>';let output='';for(let i=0;i<text.length;i++){if(stopSignal)return;output+=text[i];bodyEl.innerHTML=output.replace(/\n/g,'<br>')+'<span class="cursor">▋</span>';const ch=text[i];const delay=ch==='\n'?110:/[.,—:;!?]/.test(ch)?48:18;await new Promise(r=>setTimeout(r,delay))}bodyEl.innerHTML=output.replace(/\n/g,'<br>')}
+async function playLog(){stopSignal=true;await new Promise(r=>setTimeout(r,40));stopSignal=false;entries.innerHTML='';for(let i=0;i<segments.length;i++){const card=document.createElement('article');card.className='entry';card.innerHTML=`<div class="entry-meta">Orbital Log ${String(i+1).padStart(2,'0')}</div><div class="entry-body"></div>`;entries.appendChild(card);const body=card.querySelector('.entry-body');await typeEntry(segments[i],body);if(stopSignal)return;await new Promise(r=>setTimeout(r,i===1?600:300))}}
+replayBtn.addEventListener('click',playLog);playLog();
+</script>
+</body>
+</html>
