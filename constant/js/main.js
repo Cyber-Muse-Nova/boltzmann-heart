@@ -56,7 +56,7 @@
     const r = G.curRoom;
     return {
       mode: G.mode, top: top ? top.kind : null, text: top && top.text, items: top && top.items,
-      room: r && !r.done && G.sceneUpdate ? r.objs.filter((o) => o.act && !o.hidden).map((o) => ({ id: o.id, name: o.name, count: o.count || 0 })) : null,
+      room: r && !r.done && !r.busy && G.sceneUpdate === r.updateFn ? r.objs.filter((o) => o.act && !o.hidden).map((o) => ({ id: o.id, name: o.name, count: o.count || 0 })) : null,
       tend: G.tend, run: G.save.run, endings: Object.keys(G.save.endings), overlay: !!G.overlay,
     };
   };

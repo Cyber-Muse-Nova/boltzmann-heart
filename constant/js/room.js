@@ -51,7 +51,8 @@
       if (room.hint && G.ui.length === 0 && !near) G.text(ctx, room.hint, 160, 4, P.gray3, { align: 'center' });
     };
 
-    G.sceneUpdate = (dt, input) => {
+    G.sceneUpdate = room.updateFn = (dt, input) => {
+      room.busy = busy;
       if (room.update) room.update(dt);
       if (busy) return;
       let dx = 0, dy = 0;
@@ -87,10 +88,10 @@
         if (near.dwellT > 4500) { near.dwelled = true; G.add(near.tag, 1); }
       }
       if (input && near && (G.eat('ok') || G.eatClick())) {
-        busy = true;
+        busy = room.busy = true;
         const o = near;
         o.count = (o.count || 0) + 1;
-        Promise.resolve(o.act(o)).then(() => { busy = false; G.clearInput(); }, (e) => { err = e; });
+        Promise.resolve(o.act(o)).then(() => { busy = room.busy = false; G.clearInput(); }, (e) => { err = e; });
       }
     };
     G.clearInput();
