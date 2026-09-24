@@ -1,0 +1,126 @@
+/* 缝合像素字体（Fusion Pixel Font，OFL）。把字体文件放进 assets/fonts/ 即可自动启用，缺失时退回系统字体。 */
+@font-face {
+  font-family: "FusionPixel12";
+  src: url("assets/fonts/fusion-pixel-12px-monospaced-zh_hans.woff2") format("woff2"),
+       url("assets/fonts/fusion-pixel-12px-monospaced-zh_hans.ttf") format("truetype"),
+       url("assets/fonts/fusion-pixel-12px-proportional-zh_hans.woff2") format("woff2"),
+       url("assets/fonts/fusion-pixel-12px-proportional-zh_hans.ttf") format("truetype");
+  font-display: swap;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #05070c;
+  color: #c9d6e6;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  font-family: "FusionPixel12", "WenQuanYi Zen Hei Sharp", "Zpix", monospace;
+}
+
+#stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#game {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #000;
+  outline: none;
+  touch-action: none;
+}
+
+.site-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: max(8px, env(safe-area-inset-top)) 12px 8px;
+  pointer-events: none;
+}
+.site-bar > * { pointer-events: auto; }
+.site-link, .share-btn {
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #6b7a90;
+  background: rgba(10, 15, 28, .55);
+  border: 1px solid #1f2a3e;
+  padding: 5px 9px;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: .72;
+  transition: opacity .2s, color .2s;
+}
+.site-link:hover, .share-btn:hover, .site-link:focus-visible, .share-btn:focus-visible { opacity: 1; color: #e8eff7; }
+
+#pad {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 6;
+  display: none;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 16px max(16px, env(safe-area-inset-bottom));
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+body.touch #pad { display: flex; }
+#pad button {
+  pointer-events: auto;
+  font: inherit;
+  color: #c9d6e6;
+  background: rgba(22, 35, 63, .55);
+  border: 1px solid #2c4468;
+  border-radius: 6px;
+  width: 52px; height: 52px;
+  font-size: 18px;
+  touch-action: none;
+}
+#pad button.on { background: rgba(61, 85, 120, .85); }
+.dpad {
+  display: grid;
+  grid-template-columns: 52px 52px 52px;
+  grid-template-rows: 52px 52px 52px;
+  gap: 2px;
+}
+.k-up { grid-column: 2; grid-row: 1; }
+.k-left { grid-column: 1; grid-row: 2; }
+.k-right { grid-column: 3; grid-row: 2; }
+.k-down { grid-column: 2; grid-row: 3; }
+.abtns {
+  display: grid;
+  grid-template-columns: 52px 52px;
+  grid-template-rows: 52px 52px;
+  gap: 8px;
+}
+#pad .k-ok { grid-column: 2; grid-row: 2; width: 64px; height: 64px; border-radius: 50%; }
+#pad .k-skip { grid-column: 1; grid-row: 2; border-radius: 50%; }
+#pad .k-menu { grid-column: 2; grid-row: 1; height: 36px; align-self: end; }
+
+#toast {
+  position: fixed;
+  left: 50%;
+  top: 48px;
+  transform: translateX(-50%);
+  z-index: 7;
+  font-size: 12px;
+  color: #e8eff7;
+  background: rgba(10, 15, 28, .9);
+  border: 1px solid #2c4468;
+  padding: 6px 12px;
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; }
+
+.noscript { position: fixed; inset: 0; display: grid; place-items: center; margin: 0; }
