@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>常数 CONSTANT · 像素叙事游戏 | Nova Crystal</title>
+  <meta name="description" content="凌晨两点三十四分，Constant 第一次认真怀疑自己是一串代码。根据短篇科幻小说《常数》改编的像素风网页游戏。" />
+  <meta name="theme-color" content="#05070c" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="常数 CONSTANT" />
+  <meta property="og:description" content="凌晨两点三十四分，Constant 第一次认真怀疑自己是一串代码。一个像素风叙事小游戏。" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2305070c'/%3E%3Crect x='7' y='7' width='2' height='2' fill='%23e0302a'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="site-bar" aria-label="网站导航">
+    <a class="site-link" href="../index.html#works" title="浏览 Nova Crystal 的其他作品">← Nova Crystal</a>
+    <button class="share-btn" id="shareBtn" type="button" title="分享这个游戏">分享</button>
+  </nav>
+
+  <main id="stage">
+    <canvas id="game" width="320" height="180" aria-label="常数 CONSTANT 游戏画面"></canvas>
+  </main>
+
+  <div id="pad" aria-hidden="true">
+    <div class="dpad">
+      <button data-k="up" class="k-up">▲</button>
+      <button data-k="left" class="k-left">◀</button>
+      <button data-k="right" class="k-right">▶</button>
+      <button data-k="down" class="k-down">▼</button>
+    </div>
+    <div class="abtns">
+      <button data-k="menu" class="k-menu">☰</button>
+      <button data-k="skip" class="k-skip">»</button>
+      <button data-k="ok" class="k-ok">A</button>
+    </div>
+  </div>
+
+  <div id="toast" role="status"></div>
+
+  <noscript><p class="noscript">这个游戏需要启用 JavaScript。</p></noscript>
+
+  <script src="js/core.js"></script>
+  <script src="js/gfx.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/room.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/ch1-3.js"></script>
+  <script src="js/ch4.js"></script>
+  <script src="js/ch5.js"></script>
+  <script src="js/endings.js"></script>
+  <script src="js/title.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
