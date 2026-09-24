@@ -109,7 +109,7 @@ body.touch #pad { display: flex; }
 #toast {
   position: fixed;
   left: 50%;
-  top: 48px;
+  bottom: 18%;
   transform: translateX(-50%);
   z-index: 7;
   font-size: 12px;
