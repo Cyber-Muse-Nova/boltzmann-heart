@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="assets/i18n.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="u.title">My Universe | Nova Crystal Atelier</title>
+<meta name="description" content="Nova's digital universe: AI experiments, interactive games, sci-fi works and digital art. Nova 的数字宇宙。">
+<meta property="og:title" content="我的宇宙 · Nova Crystal">
+<meta property="og:image" content="https://cyber-muse-nova.github.io/boltzmann-heart/assets/universe/boltzmann-heart.webp">
+<meta name="theme-color" content="#030208">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/universe/universe.css">
+</head>
+<body>
+<div class="u-noise" aria-hidden="true"></div>
+<nav class="u-nav">
+  <a class="u-brand" href="index.html">Nova Crystal</a>
+  <div class="nav-tools" data-lang-toggle>
+  <div class="u-nav-links">
+    <a href="index.html" data-i18n="u.nav.home">Home</a>
+    <a href="index.html#works" data-i18n="u.nav.featured">Featured</a>
+    <a href="#map" data-i18n="u.nav.map">Galaxy Map</a>
+    <a href="#archive" data-i18n="u.nav.archive">Archive</a>
+  </div>
+  </div>
+</nav>
+
+<header class="u-hero">
+  <div class="u-grid">
+    <div class="u-index">01</div>
+    <div class="u-hero-main">
+      <p class="u-label" data-i18n="u.label">My Universe — 我的宇宙</p>
+      <h1 class="u-title" data-i18n="u.h1">Keep the past,<br>connect the work,<br><em>keep growing.</em></h1>
+    </div>
+    <aside class="u-hero-side">
+      <p data-i18n="u.intro">AI experiments, interactive games, sci-fi works, digital art and independent sites Nova has made over the years. Every planet is a real project — click to enter.</p>
+      <dl class="u-stats" id="stats"></dl>
+    </aside>
+  </div>
+</header>
+
+<section class="u-section" id="map" aria-labelledby="map-title">
+  <div class="u-grid u-head">
+    <div class="u-index">02</div>
+    <div><p class="u-label">Galaxy Map</p><h2 class="u-h2" id="map-title" data-i18n="u.map.title">Galaxy Map</h2></div>
+    <p class="u-hint" data-i18n="u.map.hint">Each orbit is a category. Hover or tap a planet to see its name; click again to jump to the project.</p>
+  </div>
+  <div class="u-map-wrap">
+    <canvas id="galaxy" aria-label="Project galaxy map — all projects are also listed in the archive below" data-i18n-aria="u.map.aria" role="img"></canvas>
+    <div class="u-tip" id="tip" hidden></div>
+    <ol class="u-legend" id="legend"></ol>
+  </div>
+</section>
+
+<section class="u-section" id="archive" aria-labelledby="archive-title">
+  <div class="u-grid u-head">
+    <div class="u-index">03</div>
+    <div><p class="u-label">Archive</p><h2 class="u-h2" id="archive-title" data-i18n="u.arc.title">Archive</h2></div>
+    <div class="u-filters" role="tablist" id="filters"></div>
+  </div>
+  <div class="u-cards" id="cards"></div>
+</section>
+
+<footer class="u-foot">
+  <span data-i18n="u.footer">Nova Crystal Atelier · My Universe</span>
+  <a href="https://github.com/Cyber-Muse-Nova" target="_blank" rel="noopener">GitHub ↗</a>
+</footer>
+
+<script src="data/projects.js"></script>
+<script src="assets/universe/universe.js"></script>
+</body>
+</html>
