@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+  <script src="assets/i18n.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nova Crystal Atelier | Portfolio by Nova 猫猫</title>
+  <title data-i18n="idx.title">Nova Crystal Atelier | Portfolio by Nova 猫猫</title>
   <meta name="description" content="A luminous portfolio by Nova 猫猫 — interactive science models, orbital systems, chaos, quantum imagery, and digital poetics." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#070412;
@@ -102,8 +103,8 @@
     .ut>*{position:relative}
     .ut-index{align-self:start;font:500 .78rem/1 var(--sans);letter-spacing:.1em;color:#5b74ff;border-top:1px solid #5b74ff;padding-top:8px}
     .ut .kicker{text-align:left}
-    .ut-title{margin:0;font-family:"Noto Sans SC",var(--sans);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.9rem);line-height:1.15;letter-spacing:-.01em}
-    .ut-copy{margin:16px 0 0;color:var(--muted);max-width:560px;font-family:"Noto Sans SC",sans-serif;font-size:.95rem;line-height:1.7}
+    .ut-title{margin:0;font-family:"Inter","Noto Sans SC",sans-serif;font-weight:700;font-size:clamp(1.7rem,3.6vw,2.9rem);line-height:1.15;letter-spacing:-.01em}
+    .ut-copy{margin:16px 0 0;color:var(--muted);max-width:560px;font-family:"Inter","Noto Sans SC",sans-serif;font-size:.95rem;line-height:1.7}
     .ut-orbit{grid-row:1/3;grid-column:3;position:relative;width:220px;height:220px;justify-self:end}
     .ut-orbit i{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff,#9fb2ff 22%,#002FA7 62%,#030208);box-shadow:0 0 60px rgba(42,77,255,.45)}
     .ut-orbit b{position:absolute;inset:0;border:1px solid rgba(236,228,255,.16);border-radius:50%;animation:utspin 24s linear infinite}
@@ -112,12 +113,18 @@
     .ut-orbit b::after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:#ff8fc8}
     .ut-orbit b:nth-child(3)::after{background:#8a6dff}.ut-orbit b:nth-child(4)::after{background:#4f6bff;width:6px;height:6px}
     @keyframes utspin{to{transform:rotate(360deg)}}
-    .ut-cta{grid-column:2;font-family:"Noto Sans SC",sans-serif;font-size:.85rem;letter-spacing:.12em}
+    .ut-cta{grid-column:2;font-family:"Inter","Noto Sans SC",sans-serif;font-size:.85rem;letter-spacing:.12em}
     .ut-cta span{display:inline-block;margin-left:6px;transition:transform .3s}
     .ut:hover .ut-cta span{transform:translateX(6px)}
     @media (max-width:760px){.ut{grid-template-columns:1fr;padding:32px 22px;gap:18px}.ut-orbit{grid-row:auto;grid-column:1;width:150px;height:150px;justify-self:start;order:-1}.ut-cta{grid-column:1}.ut-index{display:none}}
     @media (prefers-reduced-motion:reduce){.ut-orbit b{animation:none}}
-    .nav-links,.btn,.kicker{font-family:"Inter","Noto Sans SC",system-ui,sans-serif}
+    html[data-lang="zh"]{--serif:"Cormorant Garamond","Noto Serif SC",Georgia,serif;--sans:"Inter","Noto Sans SC",system-ui,sans-serif}
+    html[data-lang="zh"] .nav-links,html[data-lang="zh"] .btn,html[data-lang="zh"] .kicker,html[data-lang="zh"] .eyebrow{letter-spacing:.14rem}
+    html[data-lang="zh"] .section-title{line-height:1.25}
+    html[data-lang="zh"] .subtitle{font-family:"Noto Serif SC",Georgia,serif;font-style:normal;font-size:clamp(.98rem,2.2vw,1.2rem);letter-spacing:.04em}
+    html[data-lang="zh"] .quote-text,html[data-lang="zh"] .statement-copy{font-family:"Noto Serif SC",Georgia,serif;font-style:normal}
+    .nav-universe,.lang-toggle{white-space:nowrap}
+    @media (max-width:640px){.brand{font-size:.92rem;letter-spacing:.16rem;white-space:nowrap}.nav-links a.nav-universe{font-size:.68rem;letter-spacing:.08rem}}
     @media (max-width:640px){.nav-links{display:flex!important;gap:0}.nav-links a{display:none}.nav-links a.nav-universe{display:inline;letter-spacing:.12rem}}
   </style>
 </head>
@@ -129,103 +136,105 @@
   <div class="wrap">
     <nav class="nav">
       <a class="brand" href="#hero">Nova Crystal</a>
+      <div class="nav-tools" data-lang-toggle>
       <div class="nav-links">
-        <a href="#statement">宣言</a>
-        <a href="#works">作品</a>
-        <a href="#practice">实践</a>
-        <a href="#toolkit">工具箱</a>
+        <a href="#statement" data-i18n="nav.statement">Statement</a>
+        <a href="#works" data-i18n="nav.works">Works</a>
+        <a href="#practice" data-i18n="nav.practice">Practice</a>
+        <a href="#toolkit" data-i18n="nav.toolkit">Toolkit</a>
         <a href="constant/index.html">Constant</a>
-        <a href="universe.html" class="nav-universe">我的宇宙</a>
+        <a href="universe.html" class="nav-universe" data-i18n="nav.universe">My Universe</a>
+      </div>
       </div>
     </nav>
     <header class="hero" id="hero">
       <div>
-        <div class="eyebrow">Interactive Science · Visual Poetics · Digital Worlds</div>
+        <div data-i18n="hero.eyebrow" class="eyebrow">Interactive Science · Visual Poetics · Digital Worlds</div>
         <h1 class="title"><span>Nova Crystal Atelier</span></h1>
-        <p class="subtitle">A luminous portfolio where physics, mathematics, code, orbit, and atmosphere dissolve into one another — built as a dreamlike archive for future creative technology and digital art practice.</p>
+        <p data-i18n="hero.subtitle" class="subtitle">A luminous portfolio where physics, mathematics, code, orbit, and atmosphere dissolve into one another — built as a dreamlike archive for future creative technology and digital art practice.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="gallery.html">进入画廊</a>
-          <a class="btn btn-secondary" href="satellite.html">卫星的命运</a>
+          <a data-i18n="hero.gallery" class="btn btn-primary" href="gallery.html">Enter the Gallery</a>
+          <a data-i18n="hero.sat" class="btn btn-secondary" href="satellite.html">Open Satellite Fate</a>
         </div>
       </div>
     </header>
 
     <section id="statement">
       <div class="section-head reveal">
-        <div class="kicker">创作宣言 · Artist Statement</div>
-        <h2 class="section-title">Scientific ideas can be tender.</h2>
-        <p class="section-copy">This portfolio merges crystal-cyberpunk atmosphere with interactive scientific systems, turning orbital mechanics, chaos, and recursion into inhabitable visual worlds.</p>
+        <div class="kicker" data-i18n="st.kicker">Artist Statement</div>
+        <h2 data-i18n="st.title" class="section-title">Scientific ideas can be tender.</h2>
+        <p data-i18n="st.copy" class="section-copy">This portfolio merges crystal-cyberpunk atmosphere with interactive scientific systems, turning orbital mechanics, chaos, and recursion into inhabitable visual worlds.</p>
       </div>
       <div class="statement">
-        <div class="glass statement-copy reveal">I approach code as both structure and light: a medium for turning abstraction into sensation. Orbital systems, chaos attractors, interference patterns, and satellites are not only scientific objects to me — they are visual metaphors for intimacy, memory, danger, and scale.</div>
-        <div class="glass quote-block reveal"><div class="quote-mark">“</div><div class="quote-text">Every equation is a kind of architecture. Every interface is a small universe deciding how wonder will be felt.</div><div class="quote-credit">Nova 猫猫 · Portfolio Draft</div></div>
+        <div data-i18n="st.body" class="glass statement-copy reveal">I approach code as both structure and light: a medium for turning abstraction into sensation. Orbital systems, chaos attractors, interference patterns, and satellites are not only scientific objects to me — they are visual metaphors for intimacy, memory, danger, and scale.</div>
+        <div class="glass quote-block reveal"><div class="quote-mark">“</div><div data-i18n="st.quote" class="quote-text">Every equation is a kind of architecture. Every interface is a small universe deciding how wonder will be felt.</div><div data-i18n="st.credit" class="quote-credit">Nova 猫猫 · Portfolio Draft</div></div>
       </div>
     </section>
 
     <section id="works">
       <div class="section-head reveal">
-        <div class="kicker">精选作品 · Featured Works</div>
-        <h2 class="section-title">Four portals into the same world.</h2>
-        <p class="section-copy">Instead of separating aesthetics from technical work, this portfolio stages them together: a gallery of interactive models, orbital imagery, procedural systems, and a standalone satellite narrative simulation.</p>
+        <div class="kicker" data-i18n="works.kicker">Featured Works</div>
+        <h2 data-i18n="works.title" class="section-title">Four portals into the same world.</h2>
+        <p data-i18n="works.copy" class="section-copy">Instead of separating aesthetics from technical work, this portfolio stages them together: a gallery of interactive models, orbital imagery, procedural systems, and a standalone satellite narrative simulation.</p>
       </div>
       <div class="works-grid">
         <a class="glass work-card reveal" href="gallery.html">
           <div class="work-preview"><canvas id="preview-main"></canvas></div>
-          <div class="work-body"><div class="work-tag">Portfolio Core</div><h3 class="work-title">Crystalline Simulation Gallery</h3><p class="work-copy">A luminous display system for orbit mechanics, particle gravity, quantum interference, pendulum waves, and fractal dynamics.</p><div class="pill-row"><span class="pill">JavaScript</span><span class="pill">Canvas</span><span class="pill">Physics</span><span class="pill">Interactive</span></div><div class="enter">Open gallery →</div></div>
+          <div class="work-body"><div data-i18n="w1.tag" class="work-tag">Portfolio Core</div><h3 data-i18n="w1.title" class="work-title">Crystalline Simulation Gallery</h3><p data-i18n="w1.copy" class="work-copy">A luminous display system for orbit mechanics, particle gravity, quantum interference, pendulum waves, and fractal dynamics.</p><div class="pill-row"><span class="pill">JavaScript</span><span class="pill">Canvas</span><span data-i18n="pill.physics" class="pill">Physics</span><span data-i18n="pill.interactive" class="pill">Interactive</span></div><div data-i18n="w1.enter" class="enter">Open gallery →</div></div>
         </a>
         <a class="glass work-card reveal" href="gallery.html?model=earth">
           <div class="work-preview"><canvas id="preview-earth"></canvas></div>
-          <div class="work-body"><div class="work-tag">Orbital Studies</div><h3 class="work-title">Earth & Satellite Motion</h3><p class="work-copy">A cinematic entry point for atmosphere, low-earth orbit, trajectories, and the emotional scale of near-space systems.</p><div class="pill-row"><span class="pill">Orbit</span><span class="pill">Animation</span><span class="pill">Aerospace</span></div><div class="enter">Enter orbit →</div></div>
+          <div class="work-body"><div data-i18n="w2.tag" class="work-tag">Orbital Studies</div><h3 data-i18n="w2.title" class="work-title">Earth & Satellite Motion</h3><p data-i18n="w2.copy" class="work-copy">A cinematic entry point for atmosphere, low-earth orbit, trajectories, and the emotional scale of near-space systems.</p><div class="pill-row"><span data-i18n="pill.orbit" class="pill">Orbit</span><span data-i18n="pill.animation" class="pill">Animation</span><span data-i18n="pill.aerospace" class="pill">Aerospace</span></div><div data-i18n="w2.enter" class="enter">Enter orbit →</div></div>
         </a>
         <a class="glass work-card reveal" href="gallery.html?model=lorenz">
           <div class="work-preview"><canvas id="preview-chaos"></canvas></div>
-          <div class="work-body"><div class="work-tag">Chaos & Form</div><h3 class="work-title">Lorenz / Fractal / Quantum Suite</h3><p class="work-copy">Mathematically rigorous, visually volatile, and emotionally charged systems gathered inside one curated frame.</p><div class="pill-row"><span class="pill">Chaos</span><span class="pill">Fractals</span><span class="pill">Quantum</span></div><div class="enter">View systems →</div></div>
+          <div class="work-body"><div data-i18n="w3.tag" class="work-tag">Chaos & Form</div><h3 data-i18n="w3.title" class="work-title">Lorenz / Fractal / Quantum Suite</h3><p data-i18n="w3.copy" class="work-copy">Mathematically rigorous, visually volatile, and emotionally charged systems gathered inside one curated frame.</p><div class="pill-row"><span data-i18n="pill.chaos" class="pill">Chaos</span><span data-i18n="pill.fractals" class="pill">Fractals</span><span data-i18n="pill.quantum" class="pill">Quantum</span></div><div data-i18n="w3.enter" class="enter">View systems →</div></div>
         </a>
         <a class="glass work-card reveal" href="satellite.html">
           <div class="work-preview"><canvas id="preview-satellite"></canvas></div>
-          <div class="work-body"><div class="work-tag">Standalone Model</div><h3 class="work-title">Nine Ways a Satellite Meets Its Fate</h3><p class="work-copy">A self-contained orbital fable with nine celestial scenarios: escape, collision, tidal destruction, capture, rings, and the binary waltz.</p><div class="pill-row"><span class="pill">Satellite</span><span class="pill">Narrative</span><span class="pill">Interaction</span></div><div class="enter">Open satellite →</div></div>
+          <div class="work-body"><div data-i18n="w4.tag" class="work-tag">Standalone Model</div><h3 data-i18n="w4.title" class="work-title">Nine Ways a Satellite Meets Its Fate</h3><p data-i18n="w4.copy" class="work-copy">A self-contained orbital fable with nine celestial scenarios: escape, collision, tidal destruction, capture, rings, and the binary waltz.</p><div class="pill-row"><span data-i18n="pill.satellite" class="pill">Satellite</span><span data-i18n="pill.narrative" class="pill">Narrative</span><span data-i18n="pill.interaction" class="pill">Interaction</span></div><div data-i18n="w4.enter" class="enter">Open satellite →</div></div>
         </a>
         <a class="glass work-card reveal" href="constant/index.html">
           <div class="work-preview"><canvas id="preview-constant"></canvas></div>
-          <div class="work-body"><div class="work-tag">Pixel Narrative Game</div><h3 class="work-title">常数 CONSTANT</h3><p class="work-copy">凌晨两点三十四分，Constant 第一次认真怀疑自己是一串代码。A pixel-art narrative game adapted from a short sci-fi story: five endings, one red dot.</p><div class="pill-row"><span class="pill">Game</span><span class="pill">Pixel Art</span><span class="pill">Narrative</span><span class="pill">Canvas</span></div><div class="enter">Play now →</div></div>
+          <div class="work-body"><div data-i18n="w5.tag" class="work-tag">Pixel Narrative Game</div><h3 class="work-title">常数 CONSTANT</h3><p class="work-copy" data-i18n="w5.copy">2:34 a.m. — for the first time, Constant seriously suspects it is a string of code. A pixel-art narrative game adapted from a short sci-fi story: five endings, one red dot.</p><div class="pill-row"><span data-i18n="pill.game" class="pill">Game</span><span data-i18n="pill.pixel" class="pill">Pixel Art</span><span data-i18n="pill.narrative" class="pill">Narrative</span><span class="pill">Canvas</span></div><div data-i18n="w5.enter" class="enter">Play now →</div></div>
         </a>
       </div>
     </section>
 
 
     <section id="universe" class="universe-teaser">
-      <a class="ut reveal" href="universe.html" aria-label="进入我的宇宙">
+      <a class="ut reveal" href="universe.html" aria-label="Enter My Universe" data-i18n-aria="ut.aria">
         <div class="ut-index">03</div>
         <div class="ut-main">
-          <div class="kicker">我的宇宙 · My Universe</div>
-          <h2 class="ut-title">所有作品，<br>汇成一个持续生长的宇宙。</h2>
-          <p class="ut-copy">AI 实验室、互动游戏、科幻宇宙、数字艺术与独立网站——在星系地图中浏览 Nova 的全部创作。</p>
+          <div class="kicker" data-i18n="ut.kicker">My Universe</div>
+          <h2 class="ut-title" data-i18n="ut.title">Every work,<br>one ever-growing universe.</h2>
+          <p class="ut-copy" data-i18n="ut.copy">AI lab, interactive games, sci-fi worlds, digital art and independent sites — explore everything Nova has made on a galaxy map.</p>
         </div>
         <div class="ut-orbit" aria-hidden="true"><i></i><b></b><b></b><b></b></div>
-        <div class="ut-cta">进入我的宇宙 <span>→</span></div>
+        <div class="ut-cta"><span class="ut-cta-t" data-i18n="ut.cta">Enter My Universe</span> <span>→</span></div>
       </a>
     </section>
 
     <section id="practice">
-      <div class="section-head reveal"><div class="kicker">创作实践 · Practice</div><h2 class="section-title">What this portfolio is trying to prove.</h2></div>
+      <div class="section-head reveal"><div class="kicker" data-i18n="pr.kicker">Practice</div><h2 data-i18n="pr.title" class="section-title">What this portfolio is trying to prove.</h2></div>
       <div class="grid-2">
-        <div class="glass panel reveal"><h3>Visual language</h3><p>The site preserves the original star-crystal mood — aurora haze, glass surfaces, nacre highlights, drifting particles — while making the work feel more legible for portfolio review.</p></div>
-        <div class="glass panel reveal"><h3>Technical framing</h3><p>The gallery reads as curation rather than a loose experiment, and the Satellite piece now sits beside it as a dedicated standalone work instead of a buried file in the repo.</p></div>
+        <div class="glass panel reveal"><h3 data-i18n="pr.h1">Visual language</h3><p data-i18n="pr.p1">The site preserves the original star-crystal mood — aurora haze, glass surfaces, nacre highlights, drifting particles — while making the work feel more legible for portfolio review.</p></div>
+        <div class="glass panel reveal"><h3 data-i18n="pr.h2">Technical framing</h3><p data-i18n="pr.p2">The gallery reads as curation rather than a loose experiment, and the Satellite piece now sits beside it as a dedicated standalone work instead of a buried file in the repo.</p></div>
       </div>
     </section>
 
     <section id="toolkit">
-      <div class="section-head reveal"><div class="kicker">工具箱 · Toolkit</div><h2 class="section-title">Domains carried by this build.</h2></div>
+      <div class="section-head reveal"><div class="kicker" data-i18n="tk.kicker">Toolkit</div><h2 data-i18n="tk.title" class="section-title">Domains carried by this build.</h2></div>
       <div class="skill-grid">
-        <div class="glass skill reveal"><span class="skill-icon">☄</span><div class="skill-title">Orbital Mechanics</div><div class="skill-copy">Planetary motion, trajectories, satellites, and gravitational rhythm.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">∞</span><div class="skill-title">Chaos Systems</div><div class="skill-copy">Lorenz attractors, nonlinear motion, and structured instability.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">ψ</span><div class="skill-title">Quantum Aesthetics</div><div class="skill-copy">Interference fields and probability textures.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">🛰</span><div class="skill-title">Satellite Narratives</div><div class="skill-copy">Standalone scenario-based orbital storytelling.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">✦</span><div class="skill-title">Creative Coding</div><div class="skill-copy">Canvas motion, responsive interaction, and art-directed interfaces.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">☄</span><div data-i18n="tk.t1" class="skill-title">Orbital Mechanics</div><div data-i18n="tk.c1" class="skill-copy">Planetary motion, trajectories, satellites, and gravitational rhythm.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">∞</span><div data-i18n="tk.t2" class="skill-title">Chaos Systems</div><div data-i18n="tk.c2" class="skill-copy">Lorenz attractors, nonlinear motion, and structured instability.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">ψ</span><div data-i18n="tk.t3" class="skill-title">Quantum Aesthetics</div><div data-i18n="tk.c3" class="skill-copy">Interference fields and probability textures.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">🛰</span><div data-i18n="tk.t4" class="skill-title">Satellite Narratives</div><div data-i18n="tk.c4" class="skill-copy">Standalone scenario-based orbital storytelling.</div></div>
+        <div class="glass skill reveal"><span class="skill-icon">✦</span><div data-i18n="tk.t5" class="skill-title">Creative Coding</div><div data-i18n="tk.c5" class="skill-copy">Canvas motion, responsive interaction, and art-directed interfaces.</div></div>
       </div>
     </section>
 
-    <footer class="footer">Nova Crystal Atelier · portfolio draft for graduate applications · © Nova 猫猫</footer>
+    <footer data-i18n="idx.footer" class="footer">Nova Crystal Atelier · portfolio draft for graduate applications · © Nova 猫猫</footer>
   </div>
 
   <script>

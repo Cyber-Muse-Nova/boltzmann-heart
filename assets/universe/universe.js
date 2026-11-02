@@ -1,51 +1,63 @@
 (function(){
   "use strict";
   var P = window.PROJECTS || [], C = window.UNIVERSE_CATEGORIES || [];
-  var catName = {}; C.forEach(function(c){ catName[c.id] = c.name; });
+  var I = window.I18N || { lang:"zh", t:function(k){ return k; }, onChange:function(){} };
+  var isEn = function(){ return I.lang === "en"; };
+  var catName = function(id){ for (var i = 0; i < C.length; i++) if (C[i].id === id) return isEn() ? (C[i].en || C[i].name) : C[i].name; return ""; };
+  var title = function(p){ return isEn() ? (p.title_en || p.title_zh) : p.title_zh; };
+  var sub = function(p){ return isEn() ? (p.name !== title(p) ? p.name : p.title_zh) : p.name; };
+  var desc = function(p){ return isEn() ? (p.desc_en || p.desc_zh) : p.desc_zh; };
+  var tagsOf = function(p){ return (isEn() ? (p.tags_en || p.tags) : p.tags) || []; };
+  var stat = function(s){ return I.t("status." + s); };
   var COLORS = { ai:"#4f6bff", game:"#8a6dff", scifi:"#9fb6ff", art:"#ff8fc8", other:"#c99bff" };
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var pad = function(n){ return (n < 10 ? "0" : "") + n; };
   var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
 
+  var currentFilter = "all";
+  var filtersEl = document.getElementById("filters"), cardsEl = document.getElementById("cards");
+  function render(){
   /* ---------- stats ---------- */
   var live = P.filter(function(p){ return p.status === "已上线"; }).length;
   document.getElementById("stats").innerHTML =
-    "<div><dt>项目</dt><dd>" + pad(P.length) + "</dd></div>" +
-    "<div><dt>已上线</dt><dd>" + pad(live) + "</dd></div>" +
-    "<div><dt>星系</dt><dd>" + pad(C.length) + "</dd></div>";
+    "<div><dt>" + I.t("u.stat.projects") + "</dt><dd>" + pad(P.length) + "</dd></div>" +
+    "<div><dt>" + I.t("u.stat.live") + "</dt><dd>" + pad(live) + "</dd></div>" +
+    "<div><dt>" + I.t("u.stat.systems") + "</dt><dd>" + pad(C.length) + "</dd></div>";
 
   /* ---------- cards ---------- */
-  var cardsEl = document.getElementById("cards");
   cardsEl.innerHTML = P.map(function(p, i){
     var dev = p.status !== "已上线";
     var cover = p.cover
-      ? '<img src="' + esc(p.cover) + '" alt="' + esc(p.title_zh) + ' 页面预览" loading="lazy" decoding="async" width="1200" height="750">'
-      : '<div class="u-ph" aria-hidden="true"><i></i><b>' + esc(p.status) + '</b></div>';
+      ? '<img src="' + esc(p.cover) + '" alt="' + esc(title(p)) + ' ' + I.t('u.preview') + '" loading="lazy" decoding="async" width="1200" height="750">'
+      : '<div class="u-ph" aria-hidden="true"><i></i><b>' + esc(stat(p.status)) + '</b></div>';
     var visit = p.url
-      ? '<a class="u-btn primary" href="' + esc(p.url) + '"' + (p.home ? "" : ' target="_blank" rel="noopener"') + '>访问网站 <span class="arr">↗</span></a>'
-      : '<span class="u-btn disabled" aria-disabled="true">即将上线</span>';
+      ? '<a class="u-btn primary" href="' + esc(p.url) + '"' + (p.home ? "" : ' target="_blank" rel="noopener"') + '>' + I.t('u.visit') + ' <span class="arr">↗</span></a>'
+      : '<span class="u-btn disabled" aria-disabled="true">' + I.t('u.soon') + '</span>';
     return '<article class="u-card reveal' + (p.home ? " home" : "") + '" id="p-' + esc(p.id) + '" data-cat="' + esc(p.category) + '">' +
-      '<div class="u-cover">' + cover + '<span class="u-num">' + pad(i + 1) + '</span><span class="u-badge' + (dev ? " dev" : "") + '">' + esc(p.status) + '</span></div>' +
-      '<div class="u-body"><div class="u-meta"><span class="cat">' + esc(catName[p.category] || "") + '</span><span>' + esc(p.year || "") + '</span></div>' +
-      '<h3>' + esc(p.title_zh) + '</h3><p class="u-en">' + esc(p.name) + '</p>' +
-      '<p class="u-desc">' + esc(p.desc_zh) + '</p>' +
-      '<div class="u-tags">' + (p.tags || []).map(function(t){ return "<span>" + esc(t) + "</span>"; }).join("") + '</div>' +
-      '<div class="u-actions">' + visit + '<a class="u-btn" href="' + esc(p.repo) + '" target="_blank" rel="noopener">源代码</a></div></div></article>';
+      '<div class="u-cover">' + cover + '<span class="u-num">' + pad(i + 1) + '</span><span class="u-badge' + (dev ? " dev" : "") + '">' + esc(stat(p.status)) + '</span></div>' +
+      '<div class="u-body"><div class="u-meta"><span class="cat">' + esc(catName(p.category)) + (p.home ? '<em class="u-home"> · ' + I.t('u.home') + '</em>' : '') + '</span><span>' + esc(p.year || "") + '</span></div>' +
+      '<h3>' + esc(title(p)) + '</h3><p class="u-en">' + esc(sub(p)) + '</p>' +
+      '<p class="u-desc">' + esc(desc(p)) + '</p>' +
+      '<div class="u-tags">' + tagsOf(p).map(function(t){ return "<span>" + esc(t) + "</span>"; }).join("") + '</div>' +
+      '<div class="u-actions">' + visit + '<a class="u-btn" href="' + esc(p.repo) + '" target="_blank" rel="noopener">' + I.t('u.source') + '</a></div></div></article>';
   }).join("");
 
   /* ---------- filters ---------- */
-  var filtersEl = document.getElementById("filters");
-  var tabs = [{ id:"all", name:"全部" }].concat(C);
+  var tabs = [{ id:"all", name:I.t("u.all"), en:I.t("u.all") }].concat(C);
   filtersEl.innerHTML = tabs.map(function(t, i){
     var n = t.id === "all" ? P.length : P.filter(function(p){ return p.category === t.id; }).length;
-    return '<button role="tab" data-f="' + t.id + '" aria-selected="' + (i === 0) + '">' + t.name + '<sup>' + n + '</sup></button>';
+    return '<button role="tab" data-f="' + t.id + '" aria-selected="' + (i === 0) + '">' + (isEn() ? (t.en || t.name) : t.name) + '<sup>' + n + '</sup></button>';
   }).join("");
+    applyFilter(currentFilter);
+  }
   function applyFilter(f){
+    currentFilter = f;
     filtersEl.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-selected", b.dataset.f === f); });
     cardsEl.querySelectorAll(".u-card").forEach(function(c){ c.hidden = !(f === "all" || c.dataset.cat === f); });
   }
   filtersEl.addEventListener("click", function(e){ var b = e.target.closest("button"); if (b) applyFilter(b.dataset.f); });
 
+  render(); legend();
   /* ---------- reveal ---------- */
   if ("IntersectionObserver" in window && !reduce) {
     var ro = new IntersectionObserver(function(es){ es.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add("in"); ro.unobserve(en.target); } }); }, { rootMargin:"0px 0px -6% 0px" });
@@ -53,9 +65,11 @@
   } else document.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); });
 
   /* ---------- legend ---------- */
+  function legend(){
   document.getElementById("legend").innerHTML = C.map(function(c, i){
-    return '<li style="color:' + COLORS[c.id] + '"><span></span><b>' + pad(i + 1) + '</b><em style="font-style:normal;color:var(--ink)">' + c.name + "</em></li>";
+    return '<li style="color:' + COLORS[c.id] + '"><span></span><b>' + pad(i + 1) + '</b><em style="font-style:normal;color:var(--ink)">' + catName(c.id) + "</em></li>";
   }).join("");
+  }
 
   /* ---------- galaxy ---------- */
   var cv = document.getElementById("galaxy"), ctx = cv.getContext("2d"), tip = document.getElementById("tip");
@@ -121,7 +135,8 @@
       ctx.globalAlpha = 1;
       if (!g.mobile && (on || W > 1100)){
         ctx.fillStyle = on ? "#fff" : "rgba(236,228,255,.55)"; ctx.font = (on ? "500 " : "400 ") + "11px Inter, 'Noto Sans SC', sans-serif";
-        ctx.fillText(b.p.title_zh, b.x + b.r + 8, b.y + 4);
+        var lb = title(b.p); if (!on && lb.length > 24) lb = lb.slice(0, 22) + "…";
+        ctx.fillText(lb, b.x + b.r + 8, b.y + 4);
       }
     });
   }
@@ -141,7 +156,7 @@
   }
   function showTip(b){
     if (!b){ tip.hidden = true; return; }
-    tip.innerHTML = "<b>" + esc(b.p.title_zh) + "</b><span>" + esc(b.p.name) + "</span><i>" + esc(catName[b.p.category]) + " · " + esc(b.p.status) + "</i>";
+    tip.innerHTML = "<b>" + esc(title(b.p)) + "</b><span>" + esc(sub(b.p)) + "</span><i>" + esc(catName(b.p.category)) + " · " + esc(stat(b.p.status)) + "</i>";
     var rect = cv.getBoundingClientRect(), wrap = cv.parentNode.getBoundingClientRect();
     tip.style.left = (b.x + rect.left - wrap.left) + "px"; tip.style.top = (b.y + rect.top - wrap.top) + "px"; tip.hidden = false;
   }
@@ -172,4 +187,5 @@
   document.addEventListener("visibilitychange", function(){ document.hidden ? stop() : start(); });
   var rt; window.addEventListener("resize", function(){ clearTimeout(rt); rt = setTimeout(resize, 120); });
   resize();
+  I.onChange(function(){ render(); legend(); cardsEl.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); }); armed = null; hover = null; showTip(null); draw(); });
 })();
