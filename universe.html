@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <script src="assets/i18n.js"></script>
@@ -11,9 +11,9 @@
 <meta name="theme-color" content="#030208">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/universe/universe.css">
+<link rel="stylesheet" href="assets/universe/universe.css"><link rel="stylesheet" href="assets/atelier.css"><script src="assets/atelier.js" defer></script>
 </head>
-<body>
+<body class="atelier universe-page">
 <div class="u-noise" aria-hidden="true"></div>
 <nav class="u-nav">
   <a class="u-brand" href="index.html">Nova Crystal</a>
@@ -58,7 +58,7 @@
   <div class="u-grid u-head">
     <div class="u-index">03</div>
     <div><p class="u-label">Archive</p><h2 class="u-h2" id="archive-title" data-i18n="u.arc.title">Archive</h2></div>
-    <div class="u-filters" role="tablist" id="filters"></div>
+    <div class="u-filters" role="group" aria-label="作品分类 / Project categories" id="filters"></div>
   </div>
   <div class="u-cards" id="cards"></div>
 </section>
@@ -72,3 +72,4 @@
 <script src="assets/universe/universe.js"></script>
 </body>
 </html>
+

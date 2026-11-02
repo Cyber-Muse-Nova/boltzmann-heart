@@ -7,7 +7,7 @@ Boltzmann Heart — Universe, Galaxy, Music, Mathematics, Physics &amp; Chaos
 
 ### 中英双语 / Bilingual
 
-- 默认英文。导航右侧的 `EN / 中文` 按钮切换语言，选择保存在 localStorage（键名 `nova-lang`），首页和 universe 页共享。
+- 默认中文。导航右侧的 `EN / 中文` 按钮切换语言，选择保存在 localStorage（键名 `nova-lang`），首页和 universe 页共享。
 - 也可以用 URL 参数：`?lang=zh` 或 `?lang=en`。
 - 界面文案集中在 `assets/i18n.js`。HTML 元素用 `data-i18n="key"` 标记，aria-label 用 `data-i18n-aria="key"`。
 
@@ -28,3 +28,10 @@ Boltzmann Heart — Universe, Galaxy, Music, Mathematics, Physics &amp; Chaos
 ```
 
 卡片、分类计数和星系地图中的星球会自动生成。缺少英文字段时自动回退显示中文。预览图建议 1200×750、webp、小于 120KB，放在 `assets/universe/`。
+
+
+## Nova Crystal 主页
+
+首页直接收录精选作品、美学双面、星系地图与分类档案。`assets/atelier.css` 定义视觉样式，`assets/atelier.js` 扩展中英文案。首屏 `assets/nova-crystal.jpg` 沿用 Nova 既有的 Crystal Garden 封面。
+
+2026-11-03：按作者选择移除九个项目的展示条目，原项目仓库与文件保持独立；收录已有的 Constant 像素叙事游戏。

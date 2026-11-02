@@ -106,7 +106,7 @@
   function norm(l) { l = (l || "").toLowerCase(); return l.indexOf("zh") === 0 || l === "cn" ? "zh" : l === "en" ? "en" : null; }
   var q = null; try { q = norm(new URLSearchParams(location.search).get("lang")); } catch (e) {}
   var saved = null; try { saved = norm(localStorage.getItem(KEY)); } catch (e) {}
-  var lang = q || saved || "en";
+  var lang = q || saved || "zh";
   if (q) { try { localStorage.setItem(KEY, q); } catch (e) {} }
   var subs = [];
 
@@ -157,3 +157,4 @@
   window.I18N = { get lang() { return lang; }, t: t, set: set, onChange: function (fn) { subs.push(fn); }, dict: D, apply: apply };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
 })();
+

@@ -1,251 +1,78 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <script src="assets/i18n.js"></script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-i18n="idx.title">Nova Crystal Atelier | Portfolio by Nova 猫猫</title>
-  <meta name="description" content="A luminous portfolio by Nova 猫猫 — interactive science models, orbital systems, chaos, quantum imagery, and digital poetics." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=Liu+Jian+Mao+Cao&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#070412;
-      --panel:rgba(255,255,255,.05);
-      --border:rgba(203,166,255,.16);
-      --text:#f2ecff;
-      --muted:rgba(236,224,255,.68);
-      --lav:#c26aff;
-      --cyan:#79d8ff;
-      --rose:#ff78be;
-      --gold:#ffd7ac;
-      --shadow:0 24px 80px rgba(0,0,0,.38);
-      --serif:"Cormorant Garamond", "Liu Jian Mao Cao", "Ma Shan Zheng", Georgia, serif;
-      --sans:"Inter", "Liu Jian Mao Cao", "Noto Sans SC", system-ui, sans-serif;
-      --cjk-italic:"Liu Jian Mao Cao", "Ma Shan Zheng", cursive;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      min-height:100vh;
-      color:var(--text);
-      font-family:var(--sans);
-      background:
-        radial-gradient(circle at 18% 12%, rgba(194,106,255,.18), transparent 26%),
-        radial-gradient(circle at 82% 18%, rgba(121,216,255,.12), transparent 24%),
-        radial-gradient(circle at 50% 82%, rgba(255,120,190,.10), transparent 26%),
-        linear-gradient(180deg, #080412 0%, #090513 24%, #070412 56%, #06030f 100%);
-      overflow-x:hidden;
-    }
-    #sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-    .glow{position:fixed;border-radius:999px;filter:blur(120px);pointer-events:none;z-index:0;opacity:.48}
-    .g1{width:42rem;height:42rem;top:-12rem;right:-8rem;background:radial-gradient(circle, rgba(194,106,255,.18), transparent 68%)}
-    .g2{width:34rem;height:34rem;left:-8rem;bottom:-9rem;background:radial-gradient(circle, rgba(121,216,255,.14), transparent 68%)}
-    .g3{width:22rem;height:22rem;left:50%;top:38%;transform:translateX(-50%);background:radial-gradient(circle, rgba(255,120,190,.10), transparent 70%)}
-    .wrap{position:relative;z-index:1;width:min(1220px, calc(100% - 32px));margin:0 auto}
-    .nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:18px 0;background:linear-gradient(to bottom, rgba(8,4,18,.72), rgba(8,4,18,.18));backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.04)}
-    .brand{color:var(--text);text-decoration:none;font-family:var(--serif);font-size:1.1rem;letter-spacing:.28rem;text-transform:uppercase}
-    .nav-links{display:flex;gap:24px;font-size:.78rem;letter-spacing:.18rem;text-transform:uppercase}
-    .nav-links a{color:var(--muted);text-decoration:none}
-    .nav-links a:hover{color:var(--text)}
-    .hero{min-height:92vh;display:grid;place-items:center;padding:48px 0 70px;text-align:center}
-    .eyebrow{color:var(--muted);font-size:.72rem;letter-spacing:.42rem;text-transform:uppercase;margin-bottom:18px}
-    .title{margin:0;font-family:var(--serif);font-size:clamp(3.4rem,11vw,7rem);font-weight:400;line-height:.95;letter-spacing:.12rem}
-    .title span{background:linear-gradient(135deg,#ffffff 0%,#f2d8ff 20%,#8be1ff 46%,#ff9bce 74%,#ffe0ba 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    .subtitle{max-width:780px;margin:22px auto 0;font-family:"Cormorant Garamond","Liu Jian Mao Cao","Ma Shan Zheng",Georgia,serif;font-size:clamp(1.05rem,2.6vw,1.45rem);font-style:italic;line-height:1.7;color:var(--muted)}
-    .hero-cta{margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;text-decoration:none;font-size:.74rem;letter-spacing:.13rem;text-transform:uppercase;transition:transform .25s ease}
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{color:#18051d;background:linear-gradient(135deg,#ffd8ef,#cff3ff 55%,#ffe0b8)}
-    .btn-secondary{color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--border)}
-    section{padding:24px 0 90px}
-    .section-head{text-align:center;margin-bottom:34px}
-    .kicker{color:rgba(236,224,255,.48);font-size:.70rem;letter-spacing:.34rem;text-transform:uppercase;margin-bottom:12px}
-    .section-title{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:400;margin:0;line-height:1.04}
-    .section-copy{max-width:760px;margin:14px auto 0;color:var(--muted);font-size:1rem;line-height:1.85}
-    .glass{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.04);backdrop-filter:blur(18px)}
-    .statement{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
-    .statement-copy{padding:34px 32px;font-family:var(--serif);font-size:clamp(1.1rem,2.4vw,1.45rem);line-height:1.8;color:rgba(248,242,255,.84)}
-    .quote-block{padding:30px;display:flex;flex-direction:column;justify-content:space-between;min-height:280px;background:linear-gradient(135deg, rgba(194,106,255,.10), rgba(121,216,255,.06))}
-    .quote-mark{font-family:var(--serif);font-size:5rem;line-height:.7;color:rgba(255,255,255,.12)}
-    .quote-text{font-family:"Cormorant Garamond","Liu Jian Mao Cao","Ma Shan Zheng",Georgia,serif;font-size:1.25rem;line-height:1.65;color:rgba(244,237,255,.88);font-style:italic}
-    .quote-credit{color:rgba(236,224,255,.48);font-size:.78rem;letter-spacing:.18rem;text-transform:uppercase}
-    .works-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px}
-    .work-card{position:relative;overflow:hidden;min-height:430px;text-decoration:none;color:inherit;transition:transform .32s ease,border-color .32s ease,box-shadow .32s ease}
-    .work-card:hover{transform:translateY(-6px);border-color:rgba(203,166,255,.34);box-shadow:0 34px 80px rgba(0,0,0,.34),0 0 40px rgba(194,106,255,.12)}
-    .work-preview{height:228px;position:relative;background:linear-gradient(180deg, rgba(8,4,18,.4), rgba(8,4,18,.78));border-bottom:1px solid rgba(255,255,255,.06)}
-    .work-preview canvas{width:100%;height:100%;display:block}
-    .work-preview::after{content:"";position:absolute;left:0;right:0;bottom:0;height:84px;background:linear-gradient(180deg, rgba(7,4,18,0), rgba(7,4,18,.9));pointer-events:none}
-    .work-body{padding:24px 22px 24px}
-    .work-tag{color:rgba(236,224,255,.56);font-size:.68rem;letter-spacing:.22rem;text-transform:uppercase;margin-bottom:10px}
-    .work-title{margin:0;font-family:var(--serif);font-size:1.95rem;font-weight:500;line-height:1.05;background:linear-gradient(135deg,#f7efff,#98e5ff 65%,#ffd8ef);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    .work-copy{margin:12px 0 16px;color:var(--muted);line-height:1.78;font-size:.96rem}
-    .pill-row{display:flex;flex-wrap:wrap;gap:8px}
-    .pill{padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);color:rgba(242,236,255,.70);font-size:.68rem;letter-spacing:.07rem}
-    .enter{margin-top:18px;display:inline-flex;align-items:center;gap:9px;font-size:.75rem;letter-spacing:.20rem;text-transform:uppercase;color:#a8e7ff}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .panel{padding:28px 24px}.panel h3{margin:0 0 10px;font-family:var(--serif);font-size:1.65rem;font-weight:500}.panel p{margin:0;color:var(--muted);line-height:1.85;font-size:.98rem}
-    .skill-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:20px}
-    .skill{padding:22px 16px;text-align:center;min-height:142px}.skill-icon{font-size:1.9rem;margin-bottom:10px;display:block}.skill-title{font-family:var(--serif);font-size:1.12rem;margin-bottom:6px}.skill-copy{color:var(--muted);font-size:.84rem;line-height:1.55}
-    .footer{padding:28px 0 70px;text-align:center;color:rgba(236,224,255,.42);font-size:.76rem;letter-spacing:.20rem;text-transform:uppercase}
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}.reveal.is-visible{opacity:1;transform:translateY(0)}
-    @media (max-width:980px){.statement,.grid-2{grid-template-columns:1fr}.skill-grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:640px){.wrap{width:min(1200px,calc(100% - 22px))}.nav-links{display:none}.hero{min-height:auto;padding:40px 0 52px}.skill-grid{grid-template-columns:1fr}}
-
-    /* ---- 我的宇宙 teaser ---- */
-    .nav-links a.nav-universe{color:var(--text);border-bottom:1px solid #2a4dff;padding-bottom:2px}
-    .universe-teaser{padding:20px 0 60px}
-    .ut{position:relative;display:grid;grid-template-columns:80px 1fr 260px;gap:32px;align-items:center;padding:44px 40px;text-decoration:none;color:var(--text);background:#030208;border-top:1px solid rgba(236,228,255,.14);border-bottom:1px solid rgba(236,228,255,.14);overflow:hidden;transition:background .4s ease}
-    .ut::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 85% 50%,rgba(0,47,167,.35),transparent 70%);opacity:.8;transition:opacity .4s}
-    .ut:hover::before{opacity:1}
-    .ut>*{position:relative}
-    .ut-index{align-self:start;font:500 .78rem/1 var(--sans);letter-spacing:.1em;color:#5b74ff;border-top:1px solid #5b74ff;padding-top:8px}
-    .ut .kicker{text-align:left}
-    .ut-title{margin:0;font-family:"Inter","Noto Sans SC",sans-serif;font-weight:700;font-size:clamp(1.7rem,3.6vw,2.9rem);line-height:1.15;letter-spacing:-.01em}
-    .ut-copy{margin:16px 0 0;color:var(--muted);max-width:560px;font-family:"Inter","Noto Sans SC",sans-serif;font-size:.95rem;line-height:1.7}
-    .ut-orbit{grid-row:1/3;grid-column:3;position:relative;width:220px;height:220px;justify-self:end}
-    .ut-orbit i{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff,#9fb2ff 22%,#002FA7 62%,#030208);box-shadow:0 0 60px rgba(42,77,255,.45)}
-    .ut-orbit b{position:absolute;inset:0;border:1px solid rgba(236,228,255,.16);border-radius:50%;animation:utspin 24s linear infinite}
-    .ut-orbit b:nth-child(3){inset:14%;animation-duration:16s;animation-direction:reverse}
-    .ut-orbit b:nth-child(4){inset:26%;animation-duration:10s}
-    .ut-orbit b::after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:#ff8fc8}
-    .ut-orbit b:nth-child(3)::after{background:#8a6dff}.ut-orbit b:nth-child(4)::after{background:#4f6bff;width:6px;height:6px}
-    @keyframes utspin{to{transform:rotate(360deg)}}
-    .ut-cta{grid-column:2;font-family:"Inter","Noto Sans SC",sans-serif;font-size:.85rem;letter-spacing:.12em}
-    .ut-cta span{display:inline-block;margin-left:6px;transition:transform .3s}
-    .ut:hover .ut-cta span{transform:translateX(6px)}
-    @media (max-width:760px){.ut{grid-template-columns:1fr;padding:32px 22px;gap:18px}.ut-orbit{grid-row:auto;grid-column:1;width:150px;height:150px;justify-self:start;order:-1}.ut-cta{grid-column:1}.ut-index{display:none}}
-    @media (prefers-reduced-motion:reduce){.ut-orbit b{animation:none}}
-    html[data-lang="zh"]{--serif:"Cormorant Garamond","Noto Serif SC",Georgia,serif;--sans:"Inter","Noto Sans SC",system-ui,sans-serif}
-    html[data-lang="zh"] .nav-links,html[data-lang="zh"] .btn,html[data-lang="zh"] .kicker,html[data-lang="zh"] .eyebrow{letter-spacing:.14rem}
-    html[data-lang="zh"] .section-title{line-height:1.25}
-    html[data-lang="zh"] .subtitle{font-family:"Noto Serif SC",Georgia,serif;font-style:normal;font-size:clamp(.98rem,2.2vw,1.2rem);letter-spacing:.04em}
-    html[data-lang="zh"] .quote-text,html[data-lang="zh"] .statement-copy{font-family:"Noto Serif SC",Georgia,serif;font-style:normal}
-    .nav-universe,.lang-toggle{white-space:nowrap}
-    @media (max-width:640px){.brand{font-size:.92rem;letter-spacing:.16rem;white-space:nowrap}.nav-links a.nav-universe{font-size:.68rem;letter-spacing:.08rem}}
-    @media (max-width:640px){.nav-links{display:flex!important;gap:0}.nav-links a{display:none}.nav-links a.nav-universe{display:inline;letter-spacing:.12rem}}
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0515">
+<title>Nova Crystal · 猫猫的美学宇宙</title>
+<meta name="description" content="Nova 的私人创作宇宙。水晶、代码、科幻小说与音乐，在深空中独立发光。">
+<meta property="og:title" content="Nova Crystal · 猫猫的美学宇宙">
+<meta property="og:description" content="在宇宙的某个角落，制造自己的光。科幻、交互、音乐与数字艺术。">
+<meta property="og:image" content="https://cyber-muse-nova.github.io/boltzmann-heart/assets/nova-crystal.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/nova-crystal.jpg" as="image">
+<link rel="stylesheet" href="assets/universe/universe.css"><link rel="stylesheet" href="assets/atelier.css">
+<script src="assets/i18n.js"></script><script src="assets/atelier.js" defer></script>
 </head>
-<body>
-  <canvas id="sky" aria-hidden="true"></canvas>
-  <div class="glow g1" aria-hidden="true"></div>
-  <div class="glow g2" aria-hidden="true"></div>
-  <div class="glow g3" aria-hidden="true"></div>
-  <div class="wrap">
-    <nav class="nav">
-      <a class="brand" href="#hero">Nova Crystal</a>
-      <div class="nav-tools" data-lang-toggle>
-      <div class="nav-links">
-        <a href="#statement" data-i18n="nav.statement">Statement</a>
-        <a href="#works" data-i18n="nav.works">Works</a>
-        <a href="#practice" data-i18n="nav.practice">Practice</a>
-        <a href="#toolkit" data-i18n="nav.toolkit">Toolkit</a>
-        <a href="constant/index.html">Constant</a>
-        <a href="universe.html" class="nav-universe" data-i18n="nav.universe">My Universe</a>
-      </div>
-      </div>
-    </nav>
-    <header class="hero" id="hero">
-      <div>
-        <div data-i18n="hero.eyebrow" class="eyebrow">Interactive Science · Visual Poetics · Digital Worlds</div>
-        <h1 class="title"><span>Nova Crystal Atelier</span></h1>
-        <p data-i18n="hero.subtitle" class="subtitle">A luminous portfolio where physics, mathematics, code, orbit, and atmosphere dissolve into one another — built as a dreamlike archive for future creative technology and digital art practice.</p>
-        <div class="hero-cta">
-          <a data-i18n="hero.gallery" class="btn btn-primary" href="gallery.html">Enter the Gallery</a>
-          <a data-i18n="hero.sat" class="btn btn-secondary" href="satellite.html">Open Satellite Fate</a>
-        </div>
-      </div>
-    </header>
-
-    <section id="statement">
-      <div class="section-head reveal">
-        <div class="kicker" data-i18n="st.kicker">Artist Statement</div>
-        <h2 data-i18n="st.title" class="section-title">Scientific ideas can be tender.</h2>
-        <p data-i18n="st.copy" class="section-copy">This portfolio merges crystal-cyberpunk atmosphere with interactive scientific systems, turning orbital mechanics, chaos, and recursion into inhabitable visual worlds.</p>
-      </div>
-      <div class="statement">
-        <div data-i18n="st.body" class="glass statement-copy reveal">I approach code as both structure and light: a medium for turning abstraction into sensation. Orbital systems, chaos attractors, interference patterns, and satellites are not only scientific objects to me — they are visual metaphors for intimacy, memory, danger, and scale.</div>
-        <div class="glass quote-block reveal"><div class="quote-mark">“</div><div data-i18n="st.quote" class="quote-text">Every equation is a kind of architecture. Every interface is a small universe deciding how wonder will be felt.</div><div data-i18n="st.credit" class="quote-credit">Nova 猫猫 · Portfolio Draft</div></div>
-      </div>
-    </section>
-
-    <section id="works">
-      <div class="section-head reveal">
-        <div class="kicker" data-i18n="works.kicker">Featured Works</div>
-        <h2 data-i18n="works.title" class="section-title">Four portals into the same world.</h2>
-        <p data-i18n="works.copy" class="section-copy">Instead of separating aesthetics from technical work, this portfolio stages them together: a gallery of interactive models, orbital imagery, procedural systems, and a standalone satellite narrative simulation.</p>
-      </div>
-      <div class="works-grid">
-        <a class="glass work-card reveal" href="gallery.html">
-          <div class="work-preview"><canvas id="preview-main"></canvas></div>
-          <div class="work-body"><div data-i18n="w1.tag" class="work-tag">Portfolio Core</div><h3 data-i18n="w1.title" class="work-title">Crystalline Simulation Gallery</h3><p data-i18n="w1.copy" class="work-copy">A luminous display system for orbit mechanics, particle gravity, quantum interference, pendulum waves, and fractal dynamics.</p><div class="pill-row"><span class="pill">JavaScript</span><span class="pill">Canvas</span><span data-i18n="pill.physics" class="pill">Physics</span><span data-i18n="pill.interactive" class="pill">Interactive</span></div><div data-i18n="w1.enter" class="enter">Open gallery →</div></div>
-        </a>
-        <a class="glass work-card reveal" href="gallery.html?model=earth">
-          <div class="work-preview"><canvas id="preview-earth"></canvas></div>
-          <div class="work-body"><div data-i18n="w2.tag" class="work-tag">Orbital Studies</div><h3 data-i18n="w2.title" class="work-title">Earth & Satellite Motion</h3><p data-i18n="w2.copy" class="work-copy">A cinematic entry point for atmosphere, low-earth orbit, trajectories, and the emotional scale of near-space systems.</p><div class="pill-row"><span data-i18n="pill.orbit" class="pill">Orbit</span><span data-i18n="pill.animation" class="pill">Animation</span><span data-i18n="pill.aerospace" class="pill">Aerospace</span></div><div data-i18n="w2.enter" class="enter">Enter orbit →</div></div>
-        </a>
-        <a class="glass work-card reveal" href="gallery.html?model=lorenz">
-          <div class="work-preview"><canvas id="preview-chaos"></canvas></div>
-          <div class="work-body"><div data-i18n="w3.tag" class="work-tag">Chaos & Form</div><h3 data-i18n="w3.title" class="work-title">Lorenz / Fractal / Quantum Suite</h3><p data-i18n="w3.copy" class="work-copy">Mathematically rigorous, visually volatile, and emotionally charged systems gathered inside one curated frame.</p><div class="pill-row"><span data-i18n="pill.chaos" class="pill">Chaos</span><span data-i18n="pill.fractals" class="pill">Fractals</span><span data-i18n="pill.quantum" class="pill">Quantum</span></div><div data-i18n="w3.enter" class="enter">View systems →</div></div>
-        </a>
-        <a class="glass work-card reveal" href="satellite.html">
-          <div class="work-preview"><canvas id="preview-satellite"></canvas></div>
-          <div class="work-body"><div data-i18n="w4.tag" class="work-tag">Standalone Model</div><h3 data-i18n="w4.title" class="work-title">Nine Ways a Satellite Meets Its Fate</h3><p data-i18n="w4.copy" class="work-copy">A self-contained orbital fable with nine celestial scenarios: escape, collision, tidal destruction, capture, rings, and the binary waltz.</p><div class="pill-row"><span data-i18n="pill.satellite" class="pill">Satellite</span><span data-i18n="pill.narrative" class="pill">Narrative</span><span data-i18n="pill.interaction" class="pill">Interaction</span></div><div data-i18n="w4.enter" class="enter">Open satellite →</div></div>
-        </a>
-        <a class="glass work-card reveal" href="constant/index.html">
-          <div class="work-preview"><canvas id="preview-constant"></canvas></div>
-          <div class="work-body"><div data-i18n="w5.tag" class="work-tag">Pixel Narrative Game</div><h3 class="work-title">常数 CONSTANT</h3><p class="work-copy" data-i18n="w5.copy">2:34 a.m. — for the first time, Constant seriously suspects it is a string of code. A pixel-art narrative game adapted from a short sci-fi story: five endings, one red dot.</p><div class="pill-row"><span data-i18n="pill.game" class="pill">Game</span><span data-i18n="pill.pixel" class="pill">Pixel Art</span><span data-i18n="pill.narrative" class="pill">Narrative</span><span class="pill">Canvas</span></div><div data-i18n="w5.enter" class="enter">Play now →</div></div>
-        </a>
-      </div>
-    </section>
-
-
-    <section id="universe" class="universe-teaser">
-      <a class="ut reveal" href="universe.html" aria-label="Enter My Universe" data-i18n-aria="ut.aria">
-        <div class="ut-index">03</div>
-        <div class="ut-main">
-          <div class="kicker" data-i18n="ut.kicker">My Universe</div>
-          <h2 class="ut-title" data-i18n="ut.title">Every work,<br>one ever-growing universe.</h2>
-          <p class="ut-copy" data-i18n="ut.copy">AI lab, interactive games, sci-fi worlds, digital art and independent sites — explore everything Nova has made on a galaxy map.</p>
-        </div>
-        <div class="ut-orbit" aria-hidden="true"><i></i><b></b><b></b><b></b></div>
-        <div class="ut-cta"><span class="ut-cta-t" data-i18n="ut.cta">Enter My Universe</span> <span>→</span></div>
-      </a>
-    </section>
-
-    <section id="practice">
-      <div class="section-head reveal"><div class="kicker" data-i18n="pr.kicker">Practice</div><h2 data-i18n="pr.title" class="section-title">What this portfolio is trying to prove.</h2></div>
-      <div class="grid-2">
-        <div class="glass panel reveal"><h3 data-i18n="pr.h1">Visual language</h3><p data-i18n="pr.p1">The site preserves the original star-crystal mood — aurora haze, glass surfaces, nacre highlights, drifting particles — while making the work feel more legible for portfolio review.</p></div>
-        <div class="glass panel reveal"><h3 data-i18n="pr.h2">Technical framing</h3><p data-i18n="pr.p2">The gallery reads as curation rather than a loose experiment, and the Satellite piece now sits beside it as a dedicated standalone work instead of a buried file in the repo.</p></div>
-      </div>
-    </section>
-
-    <section id="toolkit">
-      <div class="section-head reveal"><div class="kicker" data-i18n="tk.kicker">Toolkit</div><h2 data-i18n="tk.title" class="section-title">Domains carried by this build.</h2></div>
-      <div class="skill-grid">
-        <div class="glass skill reveal"><span class="skill-icon">☄</span><div data-i18n="tk.t1" class="skill-title">Orbital Mechanics</div><div data-i18n="tk.c1" class="skill-copy">Planetary motion, trajectories, satellites, and gravitational rhythm.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">∞</span><div data-i18n="tk.t2" class="skill-title">Chaos Systems</div><div data-i18n="tk.c2" class="skill-copy">Lorenz attractors, nonlinear motion, and structured instability.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">ψ</span><div data-i18n="tk.t3" class="skill-title">Quantum Aesthetics</div><div data-i18n="tk.c3" class="skill-copy">Interference fields and probability textures.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">🛰</span><div data-i18n="tk.t4" class="skill-title">Satellite Narratives</div><div data-i18n="tk.c4" class="skill-copy">Standalone scenario-based orbital storytelling.</div></div>
-        <div class="glass skill reveal"><span class="skill-icon">✦</span><div data-i18n="tk.t5" class="skill-title">Creative Coding</div><div data-i18n="tk.c5" class="skill-copy">Canvas motion, responsive interaction, and art-directed interfaces.</div></div>
-      </div>
-    </section>
-
-    <footer data-i18n="idx.footer" class="footer">Nova Crystal Atelier · portfolio draft for graduate applications · © Nova 猫猫</footer>
+<body class="atelier">
+<a class="skip-link" href="#works" data-i18n="a.skip">跳至作品</a>
+<div class="u-noise" aria-hidden="true"></div>
+<nav class="u-nav" aria-label="主导航">
+<a class="u-brand" href="index.html"><span class="brand-star">✧</span> NOVA <i>CRYSTAL</i></a>
+<div class="nav-tools" data-lang-toggle><div class="u-nav-links"><a href="#works" data-i18n="a.works">精选作品</a><a href="#aesthetic" data-i18n="a.aesthetic">美学宇宙</a><a href="#archive" data-i18n="a.archive">创作档案</a><a href="https://github.com/Cyber-Muse-Nova" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+</nav>
+<main>
+<header class="atelier-hero" id="hero">
+<div class="hero-text">
+<p class="edition">NOVA'S PERSONAL UNIVERSE <span>001 / ∞</span></p>
+<p class="small-sign" data-i18n="a.signature">科幻作者 / 数字造梦者</p>
+<h1>Nova<br><em>Crystal.</em></h1>
+<p class="hero-poem" data-i18n="a.poem">在宇宙的某个角落，<br>制造自己的光。</p>
+<p class="hero-description" data-i18n="a.description">把无法安放的想象，写成故事、音乐与可以走进去的世界。</p>
+<div class="hero-actions"><a class="pearl-button" href="#works"><span data-i18n="a.explore">探索我的创作</span><span>↗</span></a><a class="text-link" href="#map" data-i18n="a.map">沿着星轨漫游 ↓</a></div>
+</div>
+<div class="hero-art">
+<div class="art-orbit orbit-a" aria-hidden="true"></div><div class="art-orbit orbit-b" aria-hidden="true"></div>
+<img src="assets/nova-crystal.jpg" width="784" height="1168" fetchpriority="high" alt="Crystal Garden：折射粉紫与冰蓝光的水晶玫瑰，倒映在深色水面上，背后是一顶水晶冠冕。">
+<span class="art-coordinate">NC—01 / CRYSTAL GARDEN</span><span class="art-note">a small piece of eternity</span>
+<div class="pearl pearl-one" aria-hidden="true"></div><div class="pearl pearl-two" aria-hidden="true"></div>
+</div>
+<div class="hero-bottom"><span>FICTION · CODE · MUSIC · ART</span><span data-i18n="a.bottom">无限想象 / 独立发光</span><a href="#works" aria-label="向下浏览">↓</a></div>
+</header>
+<section class="selected content-width" id="works" aria-labelledby="selected-title">
+<div class="editorial-head"><div><p class="eyeline">01 / SELECTED WORLDS</p><h2 id="selected-title" data-i18n="a.selected">从这里，进入我的世界。</h2></div><a class="text-link" href="#archive" data-i18n="a.all">全部创作 ↗</a></div>
+<div class="selected-grid">
+<a class="feature feature-constant" href="constant/index.html"><div class="constant-art" aria-hidden="true"><div class="pixel-window"><div class="pixel-moon"></div><div class="pixel-star"></div></div><span class="digital-time">02:34<span class="red-dot">●</span></span><div class="pixel-floor"></div><span class="code-whisper">&gt; am_i_real?</span></div><div class="feature-content"><span class="feature-no">01 / FICTION + INTERACTION</span><h3>Constant <em>常数</em></h3><p data-i18n="a.constant">凌晨两点三十四分，他第一次认真怀疑自己是一串代码。</p><span class="feature-enter" data-i18n="a.play">进入故事 ↗</span></div></a>
+<a class="feature feature-music" href="https://cyber-muse-nova.github.io/Of-Course-I-Still-Love-You/" target="_blank" rel="noopener"><div class="music-art" aria-hidden="true"><div class="record"><i></i></div><div class="music-orbit"></div><span class="music-word">Of Course<br><em>I Still Love You.</em></span></div><div class="feature-content"><span class="feature-no">02 / MUSIC + VISUAL POETRY</span><h3 data-i18n="a.abyss">深渊里的回声</h3><p data-i18n="a.music">原创音乐、星球与影像，收容那些浓度过高的情绪。</p><span class="feature-enter" data-i18n="a.listen">走进音乐宇宙 ↗</span></div></a>
+<a class="feature feature-science" href="gallery.html"><div class="science-art" aria-hidden="true"><i></i><i></i><i></i><b></b><span>F = G m₁m₂ / r²</span></div><div class="feature-content"><span class="feature-no">03 / SCIENCE + CREATIVE CODE</span><h3 data-i18n="a.gallery">让方程生长成星系</h3><p data-i18n="a.science">轨道、混沌与量子干涉。触碰一个念头，观察整个世界的回应。</p><span class="feature-enter" data-i18n="a.enterGallery">进入交互画廊 ↗</span></div></a>
+</div>
+</section>
+<section class="aesthetic content-width" id="aesthetic" aria-labelledby="aesthetic-title"><div class="editorial-head"><div><p class="eyeline">02 / AESTHETIC UNIVERSE</p><h2 id="aesthetic-title" data-i18n="a.two">同一颗心脏，两种引力。</h2></div><p class="head-aside" data-i18n="a.twointro">一个向外绽放，一个向内坍缩。<br>我的创作，在明暗之间生长。</p></div>
+<div class="duality"><article class="light-world"><span class="world-symbol" aria-hidden="true">✧</span><p class="eyeline">I / NOVA CRYSTAL</p><h3 data-i18n="a.crystal">星晶美学</h3><p data-i18n="a.crystaldesc">光穿透水晶。珍珠连接数据。玫瑰在零重力中绽放。</p><span class="world-motto" data-i18n="a.iam">「我是美的。」</span><div class="material-list">CRYSTAL / PEARL / LIQUID LIGHT</div></article><article class="dark-world"><span class="world-symbol" aria-hidden="true">✦</span><p class="eyeline">II / COLLAPSE PROTOCOL</p><h3 data-i18n="a.collapse">坍缩协议</h3><p data-i18n="a.collapsedesc">光从裂缝渗出。帝国在燃烧。而毁灭依然有自己的秩序。</p><span class="world-motto" data-i18n="a.yours">「我是你的。」</span><div class="material-list">FRACTURE / GRAVITY / EMBER</div></article></div>
+</section>
+<div class="archive-intro content-width"><p class="eyeline">03 / CONSTELLATION OF WORKS</p><p class="archive-quote" data-i18n="a.constellation">每一个作品，都是我留在宇宙里的一颗星。</p><dl class="u-stats" id="stats"></dl></div>
+<section class="u-section" id="map" aria-labelledby="map-title">
+  <div class="u-grid u-head">
+    <div class="u-index">04</div>
+    <div><p class="u-label">Galaxy Map</p><h2 class="u-h2" id="map-title" data-i18n="u.map.title">Galaxy Map</h2></div>
+    <p class="u-hint" data-i18n="u.map.hint">Each orbit is a category. Hover or tap a planet to see its name; click again to jump to the project.</p>
   </div>
+  <div class="u-map-wrap">
+    <canvas id="galaxy" aria-label="Project galaxy map — all projects are also listed in the archive below" data-i18n-aria="u.map.aria" role="img"></canvas>
+    <div class="u-tip" id="tip" hidden></div>
+    <ol class="u-legend" id="legend"></ol>
+  </div>
+</section>
 
-  <script>
-    (function starfield(){const canvas=document.getElementById('sky');const ctx=canvas.getContext('2d');let w=0,h=0;const stars=Array.from({length:220},()=>({x:Math.random()*2400,y:Math.random()*2400,r:Math.random()*1.4+.25,speed:Math.random()*.35+.06,phase:Math.random()*Math.PI*2,hue:[285,198,330,40][Math.floor(Math.random()*4)]}));function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}resize();window.addEventListener('resize',resize);function draw(t){ctx.clearRect(0,0,w,h);for(const s of stars){const a=.28+.72*Math.sin(t*.001*s.speed+s.phase);ctx.beginPath();ctx.arc(s.x%w,s.y%h,s.r,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue},90%,84%,${Math.max(.1,a)})`;ctx.shadowBlur=10;ctx.shadowColor=`hsla(${s.hue},100%,82%,.35)`;ctx.fill()}ctx.shadowBlur=0;requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
-    (function reveal(){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}})},{threshold:.16,rootMargin:'0px 0px -30px 0px'});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))})();
-    function fitCanvas(canvas){const rect=canvas.getBoundingClientRect();const ratio=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(300,rect.width*ratio);canvas.height=Math.max(180,rect.height*ratio);return canvas.getContext('2d')}
-    (function previewMain(){const canvas=document.getElementById('preview-main');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height;const pts=Array.from({length:150},()=>{const a=Math.random()*Math.PI*2,d=30+Math.random()*110;return{x:w/2+Math.cos(a)*d,y:h/2+Math.sin(a)*d,vx:Math.sin(a)*1.1,vy:-Math.cos(a)*1.1,hue:245+Math.random()*80,r:Math.random()*1.2+.5}});function draw(){ctx.fillStyle='rgba(7,4,18,.18)';ctx.fillRect(0,0,w,h);const glow=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,60);glow.addColorStop(0,'rgba(198,118,255,.22)');glow.addColorStop(1,'rgba(198,118,255,0)');ctx.beginPath();ctx.arc(w/2,h/2,60,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();for(const p of pts){const dx=w/2-p.x,dy=h/2-p.y,dist=Math.sqrt(dx*dx+dy*dy)+6,f=90/(dist*dist);p.vx+=(dx/dist)*f;p.vy+=(dy/dist)*f;p.vx*=.997;p.vy*=.997;p.x+=p.vx;p.y+=p.vy;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue},86%,66%,.9)`;ctx.fill()}requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
-    (function previewEarth(){const canvas=document.getElementById('preview-earth');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,R=Math.min(w,h)*.16;const sats=Array.from({length:4},(_,i)=>({r:R+22+i*18,tilt:.55+i*.08,speed:.6+i*.22,phase:Math.random()*Math.PI*2,hue:260+i*25}));function draw(t){ctx.clearRect(0,0,w,h);for(const s of sats){const a=t*.001*s.speed+s.phase;ctx.beginPath();ctx.ellipse(cx,cy,s.r,s.r*s.tilt,0,0,Math.PI*2);ctx.strokeStyle='rgba(181,122,255,.12)';ctx.stroke();const x=cx+Math.cos(a)*s.r,y=cy+Math.sin(a)*s.r*s.tilt;ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=`hsla(${s.hue},90%,70%,.95)`;ctx.fill();ctx.fillStyle='rgba(122,214,255,.45)';ctx.fillRect(x-8,y-1.1,5,2.2);ctx.fillRect(x+3,y-1.1,5,2.2)}const planet=ctx.createRadialGradient(cx-R*.35,cy-R*.35,0,cx,cy,R);planet.addColorStop(0,'#61b5ff');planet.addColorStop(.55,'#1b66b5');planet.addColorStop(1,'#112e63');ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=planet;ctx.fill();const atm=ctx.createRadialGradient(cx,cy,R*.9,cx,cy,R*1.18);atm.addColorStop(0,'rgba(111,185,255,.18)');atm.addColorStop(1,'rgba(111,185,255,0)');ctx.beginPath();ctx.arc(cx,cy,R*1.18,0,Math.PI*2);ctx.fillStyle=atm;ctx.fill();requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
-    (function previewChaos(){const canvas=document.getElementById('preview-chaos');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height;let x=.1,y=0,z=0;const dt=.005,sigma=10,rho=28,beta=8/3,pts=[];for(let i=0;i<7000;i++){const dx=sigma*(y-x)*dt,dy=(x*(rho-z)-y)*dt,dz=(x*y-beta*z)*dt;x+=dx;y+=dy;z+=dz;pts.push({x,y,z})}function draw(t){ctx.fillStyle='rgba(7,4,18,.08)';ctx.fillRect(0,0,w,h);const rot=t*.00022;for(let i=0;i<48;i++){const p=pts[(Math.floor(t/18)+i*7)%pts.length],rx=p.x*Math.cos(rot)-p.z*Math.sin(rot),rz=p.x*Math.sin(rot)+p.z*Math.cos(rot),sx=w/2+rx*7,sy=h/2-p.y*7+rz*2;ctx.beginPath();ctx.arc(sx,sy,1.2,0,Math.PI*2);ctx.fillStyle=`hsla(${265+(i/48)*70},88%,66%,.86)`;ctx.fill()}requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
-    (function previewSatellite(){const canvas=document.getElementById('preview-satellite');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2;let trail=[];function draw(t){ctx.fillStyle='rgba(7,4,18,.14)';ctx.fillRect(0,0,w,h);const orbitR=Math.min(w,h)*.22;ctx.beginPath();ctx.ellipse(cx,cy,orbitR,orbitR*.58,0,0,Math.PI*2);ctx.strokeStyle='rgba(224,200,138,.18)';ctx.lineWidth=1.5;ctx.stroke();const pg=ctx.createRadialGradient(cx-18,cy-18,0,cx,cy,30);pg.addColorStop(0,'#ffffff');pg.addColorStop(.45,'#e0c88a');pg.addColorStop(1,'rgba(224,200,138,0)');ctx.beginPath();ctx.arc(cx,cy,30,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();const a=t*.0016;const sx=cx+Math.cos(a)*orbitR,sy=cy+Math.sin(a)*orbitR*.58;trail.push({x:sx,y:sy});if(trail.length>24)trail.shift();for(let i=1;i<trail.length;i++){ctx.beginPath();ctx.moveTo(trail[i-1].x,trail[i-1].y);ctx.lineTo(trail[i].x,trail[i].y);ctx.strokeStyle=`rgba(224,200,138,${i/trail.length*.5})`;ctx.lineWidth=1.3;ctx.stroke()}ctx.beginPath();ctx.arc(sx,sy,4,0,Math.PI*2);ctx.fillStyle='#f0d9b8';ctx.fill();ctx.fillStyle='rgba(122,214,255,.45)';ctx.fillRect(sx-10,sy-1.2,6,2.4);ctx.fillRect(sx+4,sy-1.2,6,2.4);requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
-    (function previewConstant(){const canvas=document.getElementById('preview-constant');const ctx=fitCanvas(canvas);const w=canvas.width,h=canvas.height;const cols=Array.from({length:18},(_,i)=>({x:(i+.5)*w/18,o:Math.random()*h,s:.4+Math.random()*.6}));function draw(t){ctx.fillStyle='#05070c';ctx.fillRect(0,0,w,h);const p=(Math.sin(t*.0004)+1)/2;for(const c of cols){for(let k=0;k<5;k++){const y=(c.o+t*.03*c.s+k*h/5)%h;ctx.fillStyle=`rgba(223,232,244,${.12+.25*p})`;ctx.fillRect(Math.round(c.x),Math.round(y),2,2)}}const px=Math.max(3,Math.round(w/110));ctx.fillStyle='#e0302a';ctx.fillRect(Math.round(w/2-px/2),Math.round(h/2-px/2),px,px);ctx.fillStyle='rgba(232,239,247,.55)';ctx.font=`${Math.round(h/14)}px monospace`;ctx.textAlign='right';ctx.fillText('02:34',w-12,h-14);requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
-  </script>
-</body>
-</html>
+<section class="u-section" id="archive" aria-labelledby="archive-title">
+  <div class="u-grid u-head">
+    <div class="u-index">05</div>
+    <div><p class="u-label">Archive</p><h2 class="u-h2" id="archive-title" data-i18n="u.arc.title">Archive</h2></div>
+    <div class="u-filters" role="group" aria-label="作品分类 / Project categories" id="filters"></div>
+  </div>
+  <div class="u-cards" id="cards"></div>
+</section>
+
+</main><footer class="atelier-footer content-width"><a class="footer-name" href="#hero">Nova <em>Crystal.</em> <span>✧</span></a><div><p data-i18n="a.footer">故事仍在继续，宇宙仍在膨胀。</p><a href="https://github.com/Cyber-Muse-Nova" target="_blank" rel="noopener">GITHUB ↗</a><span>© NOVA / 2026</span></div></footer>
+<script src="data/projects.js"></script><script src="assets/universe/universe.js"></script>
+</body></html>
