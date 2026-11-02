@@ -92,6 +92,33 @@
     .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}.reveal.is-visible{opacity:1;transform:translateY(0)}
     @media (max-width:980px){.statement,.grid-2{grid-template-columns:1fr}.skill-grid{grid-template-columns:repeat(2,1fr)}}
     @media (max-width:640px){.wrap{width:min(1200px,calc(100% - 22px))}.nav-links{display:none}.hero{min-height:auto;padding:40px 0 52px}.skill-grid{grid-template-columns:1fr}}
+
+    /* ---- 我的宇宙 teaser ---- */
+    .nav-links a.nav-universe{color:var(--text);border-bottom:1px solid #2a4dff;padding-bottom:2px}
+    .universe-teaser{padding:20px 0 60px}
+    .ut{position:relative;display:grid;grid-template-columns:80px 1fr 260px;gap:32px;align-items:center;padding:44px 40px;text-decoration:none;color:var(--text);background:#030208;border-top:1px solid rgba(236,228,255,.14);border-bottom:1px solid rgba(236,228,255,.14);overflow:hidden;transition:background .4s ease}
+    .ut::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 85% 50%,rgba(0,47,167,.35),transparent 70%);opacity:.8;transition:opacity .4s}
+    .ut:hover::before{opacity:1}
+    .ut>*{position:relative}
+    .ut-index{align-self:start;font:500 .78rem/1 var(--sans);letter-spacing:.1em;color:#5b74ff;border-top:1px solid #5b74ff;padding-top:8px}
+    .ut .kicker{text-align:left}
+    .ut-title{margin:0;font-family:"Noto Sans SC",var(--sans);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.9rem);line-height:1.15;letter-spacing:-.01em}
+    .ut-copy{margin:16px 0 0;color:var(--muted);max-width:560px;font-family:"Noto Sans SC",sans-serif;font-size:.95rem;line-height:1.7}
+    .ut-orbit{grid-row:1/3;grid-column:3;position:relative;width:220px;height:220px;justify-self:end}
+    .ut-orbit i{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 32% 30%,#fff,#9fb2ff 22%,#002FA7 62%,#030208);box-shadow:0 0 60px rgba(42,77,255,.45)}
+    .ut-orbit b{position:absolute;inset:0;border:1px solid rgba(236,228,255,.16);border-radius:50%;animation:utspin 24s linear infinite}
+    .ut-orbit b:nth-child(3){inset:14%;animation-duration:16s;animation-direction:reverse}
+    .ut-orbit b:nth-child(4){inset:26%;animation-duration:10s}
+    .ut-orbit b::after{content:"";position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;background:#ff8fc8}
+    .ut-orbit b:nth-child(3)::after{background:#8a6dff}.ut-orbit b:nth-child(4)::after{background:#4f6bff;width:6px;height:6px}
+    @keyframes utspin{to{transform:rotate(360deg)}}
+    .ut-cta{grid-column:2;font-family:"Noto Sans SC",sans-serif;font-size:.85rem;letter-spacing:.12em}
+    .ut-cta span{display:inline-block;margin-left:6px;transition:transform .3s}
+    .ut:hover .ut-cta span{transform:translateX(6px)}
+    @media (max-width:760px){.ut{grid-template-columns:1fr;padding:32px 22px;gap:18px}.ut-orbit{grid-row:auto;grid-column:1;width:150px;height:150px;justify-self:start;order:-1}.ut-cta{grid-column:1}.ut-index{display:none}}
+    @media (prefers-reduced-motion:reduce){.ut-orbit b{animation:none}}
+    .nav-links,.btn,.kicker{font-family:"Inter","Noto Sans SC",system-ui,sans-serif}
+    @media (max-width:640px){.nav-links{display:flex!important;gap:0}.nav-links a{display:none}.nav-links a.nav-universe{display:inline;letter-spacing:.12rem}}
   </style>
 </head>
 <body>
@@ -103,11 +130,12 @@
     <nav class="nav">
       <a class="brand" href="#hero">Nova Crystal</a>
       <div class="nav-links">
-        <a href="#statement">Statement</a>
-        <a href="#works">Works</a>
-        <a href="#practice">Practice</a>
-        <a href="#toolkit">Toolkit</a>
+        <a href="#statement">宣言</a>
+        <a href="#works">作品</a>
+        <a href="#practice">实践</a>
+        <a href="#toolkit">工具箱</a>
         <a href="constant/index.html">Constant</a>
+        <a href="universe.html" class="nav-universe">我的宇宙</a>
       </div>
     </nav>
     <header class="hero" id="hero">
@@ -116,15 +144,15 @@
         <h1 class="title"><span>Nova Crystal Atelier</span></h1>
         <p class="subtitle">A luminous portfolio where physics, mathematics, code, orbit, and atmosphere dissolve into one another — built as a dreamlike archive for future creative technology and digital art practice.</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="gallery.html">Enter the Gallery</a>
-          <a class="btn btn-secondary" href="satellite.html">Open Satellite Fate</a>
+          <a class="btn btn-primary" href="gallery.html">进入画廊</a>
+          <a class="btn btn-secondary" href="satellite.html">卫星的命运</a>
         </div>
       </div>
     </header>
 
     <section id="statement">
       <div class="section-head reveal">
-        <div class="kicker">Artist Statement</div>
+        <div class="kicker">创作宣言 · Artist Statement</div>
         <h2 class="section-title">Scientific ideas can be tender.</h2>
         <p class="section-copy">This portfolio merges crystal-cyberpunk atmosphere with interactive scientific systems, turning orbital mechanics, chaos, and recursion into inhabitable visual worlds.</p>
       </div>
@@ -136,7 +164,7 @@
 
     <section id="works">
       <div class="section-head reveal">
-        <div class="kicker">Featured Works</div>
+        <div class="kicker">精选作品 · Featured Works</div>
         <h2 class="section-title">Four portals into the same world.</h2>
         <p class="section-copy">Instead of separating aesthetics from technical work, this portfolio stages them together: a gallery of interactive models, orbital imagery, procedural systems, and a standalone satellite narrative simulation.</p>
       </div>
@@ -164,8 +192,22 @@
       </div>
     </section>
 
+
+    <section id="universe" class="universe-teaser">
+      <a class="ut reveal" href="universe.html" aria-label="进入我的宇宙">
+        <div class="ut-index">03</div>
+        <div class="ut-main">
+          <div class="kicker">我的宇宙 · My Universe</div>
+          <h2 class="ut-title">所有作品，<br>汇成一个持续生长的宇宙。</h2>
+          <p class="ut-copy">AI 实验室、互动游戏、科幻宇宙、数字艺术与独立网站——在星系地图中浏览 Nova 的全部创作。</p>
+        </div>
+        <div class="ut-orbit" aria-hidden="true"><i></i><b></b><b></b><b></b></div>
+        <div class="ut-cta">进入我的宇宙 <span>→</span></div>
+      </a>
+    </section>
+
     <section id="practice">
-      <div class="section-head reveal"><div class="kicker">Practice</div><h2 class="section-title">What this portfolio is trying to prove.</h2></div>
+      <div class="section-head reveal"><div class="kicker">创作实践 · Practice</div><h2 class="section-title">What this portfolio is trying to prove.</h2></div>
       <div class="grid-2">
         <div class="glass panel reveal"><h3>Visual language</h3><p>The site preserves the original star-crystal mood — aurora haze, glass surfaces, nacre highlights, drifting particles — while making the work feel more legible for portfolio review.</p></div>
         <div class="glass panel reveal"><h3>Technical framing</h3><p>The gallery reads as curation rather than a loose experiment, and the Satellite piece now sits beside it as a dedicated standalone work instead of a buried file in the repo.</p></div>
@@ -173,7 +215,7 @@
     </section>
 
     <section id="toolkit">
-      <div class="section-head reveal"><div class="kicker">Toolkit</div><h2 class="section-title">Domains carried by this build.</h2></div>
+      <div class="section-head reveal"><div class="kicker">工具箱 · Toolkit</div><h2 class="section-title">Domains carried by this build.</h2></div>
       <div class="skill-grid">
         <div class="glass skill reveal"><span class="skill-icon">☄</span><div class="skill-title">Orbital Mechanics</div><div class="skill-copy">Planetary motion, trajectories, satellites, and gravitational rhythm.</div></div>
         <div class="glass skill reveal"><span class="skill-icon">∞</span><div class="skill-title">Chaos Systems</div><div class="skill-copy">Lorenz attractors, nonlinear motion, and structured instability.</div></div>

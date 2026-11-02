@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>我的宇宙 · My Universe | Nova Crystal Atelier</title>
+<meta name="description" content="Nova 的数字宇宙：AI 实验、互动游戏、科幻作品与数字艺术。">
+<meta property="og:title" content="我的宇宙 · Nova Crystal">
+<meta property="og:image" content="https://cyber-muse-nova.github.io/boltzmann-heart/assets/universe/boltzmann-heart.webp">
+<meta name="theme-color" content="#030208">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/universe/universe.css">
+</head>
+<body>
+<div class="u-noise" aria-hidden="true"></div>
+<nav class="u-nav">
+  <a class="u-brand" href="index.html">Nova Crystal</a>
+  <div class="u-nav-links">
+    <a href="index.html">首页</a>
+    <a href="index.html#works">精选作品</a>
+    <a href="#map">星系地图</a>
+    <a href="#archive">作品档案</a>
+  </div>
+</nav>
+
+<header class="u-hero">
+  <div class="u-grid">
+    <div class="u-index">01</div>
+    <div class="u-hero-main">
+      <p class="u-label">My Universe — 我的宇宙</p>
+      <h1 class="u-title">保留过去，<br>连接作品，<br><em>持续生长。</em></h1>
+    </div>
+    <aside class="u-hero-side">
+      <p>这里收录 Nova 过去创作的 AI 实验、互动游戏、科幻作品、数字艺术与独立网站。每一颗星球都是一个真实存在的项目，点击即可进入。</p>
+      <dl class="u-stats" id="stats"></dl>
+    </aside>
+  </div>
+</header>
+
+<section class="u-section" id="map" aria-labelledby="map-title">
+  <div class="u-grid u-head">
+    <div class="u-index">02</div>
+    <div><p class="u-label">Galaxy Map</p><h2 class="u-h2" id="map-title">星系地图</h2></div>
+    <p class="u-hint">每条轨道是一个分类。悬停或轻点星球查看名称，再次点击进入项目。</p>
+  </div>
+  <div class="u-map-wrap">
+    <canvas id="galaxy" aria-label="项目星系地图，可通过下方作品档案浏览全部项目" role="img"></canvas>
+    <div class="u-tip" id="tip" hidden></div>
+    <ol class="u-legend" id="legend"></ol>
+  </div>
+</section>
+
+<section class="u-section" id="archive" aria-labelledby="archive-title">
+  <div class="u-grid u-head">
+    <div class="u-index">03</div>
+    <div><p class="u-label">Archive</p><h2 class="u-h2" id="archive-title">作品档案</h2></div>
+    <div class="u-filters" role="tablist" id="filters"></div>
+  </div>
+  <div class="u-cards" id="cards"></div>
+</section>
+
+<footer class="u-foot">
+  <span>Nova Crystal Atelier · 我的宇宙</span>
+  <a href="https://github.com/Cyber-Muse-Nova" target="_blank" rel="noopener">GitHub ↗</a>
+</footer>
+
+<script src="data/projects.js"></script>
+<script src="assets/universe/universe.js"></script>
+</body>
+</html>
