@@ -39,7 +39,7 @@
       '<h3>' + esc(title(p)) + '</h3><p class="u-en">' + esc(sub(p)) + '</p>' +
       '<p class="u-desc">' + esc(desc(p)) + '</p>' +
       '<div class="u-tags">' + tagsOf(p).map(function(t){ return "<span>" + esc(t) + "</span>"; }).join("") + '</div>' +
-      '<div class="u-actions">' + visit + '<a class="u-btn" href="' + esc(p.repo) + '" target="_blank" rel="noopener">' + I.t('u.source') + '</a></div></div></article>';
+      '<div class="u-actions">' + visit + '</div></div></article>';
   }).join("");
 
   /* ---------- filters ---------- */

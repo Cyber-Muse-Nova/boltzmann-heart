@@ -9,17 +9,18 @@
 <meta property="og:description" content="在宇宙的某个角落，制造自己的光。科幻、交互、音乐与数字艺术。">
 <meta property="og:image" content="https://cyber-muse-nova.github.io/boltzmann-heart/assets/nova-crystal.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="preload" href="assets/nova-crystal.jpg" as="image">
 <link rel="stylesheet" href="assets/universe/universe.css"><link rel="stylesheet" href="assets/atelier.css">
 <script src="assets/i18n.js"></script><script src="assets/atelier.js" defer></script>
 </head>
 <body class="atelier">
+<canvas class="sky-canopy" id="nova-sky" aria-hidden="true"></canvas>
 <a class="skip-link" href="#works" data-i18n="a.skip">跳至作品</a>
 <div class="u-noise" aria-hidden="true"></div>
 <nav class="u-nav" aria-label="主导航">
 <a class="u-brand" href="index.html"><span class="brand-star">✧</span> NOVA <i>CRYSTAL</i></a>
-<div class="nav-tools" data-lang-toggle><div class="u-nav-links"><a href="#works" data-i18n="a.works">精选作品</a><a href="#aesthetic" data-i18n="a.aesthetic">美学宇宙</a><a href="#archive" data-i18n="a.archive">创作档案</a><a href="https://github.com/Cyber-Muse-Nova" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+<div class="nav-tools" data-lang-toggle><div class="u-nav-links"><a href="#works" data-i18n="a.works">精选作品</a><a href="#aesthetic" data-i18n="a.aesthetic">美学宇宙</a><a href="#archive" data-i18n="a.archive">创作档案</a></div></div>
 </nav>
 <main>
 <header class="atelier-hero" id="hero">
@@ -73,6 +74,8 @@
   <div class="u-cards" id="cards"></div>
 </section>
 
-</main><footer class="atelier-footer content-width"><a class="footer-name" href="#hero">Nova <em>Crystal.</em> <span>✧</span></a><div><p data-i18n="a.footer">故事仍在继续，宇宙仍在膨胀。</p><a href="https://github.com/Cyber-Muse-Nova" target="_blank" rel="noopener">GITHUB ↗</a><span>© NOVA / 2026</span></div></footer>
+</main><footer class="atelier-footer content-width"><a class="footer-name" href="#hero">Nova <em>Crystal.</em> <span>✧</span></a><div><p data-i18n="a.footer">故事仍在继续，宇宙仍在膨胀。</p><span>© NOVA / 2026</span></div></footer>
 <script src="data/projects.js"></script><script src="assets/universe/universe.js"></script>
+<div class="cosmic-finale" aria-hidden="true"><canvas id="gravity-garden"></canvas><div class="gravity-caption">NOVA CRYSTAL <span>✧</span> EVENT HORIZON</div></div>
+<script src="assets/cosmos.js" defer></script>
 </body></html>
