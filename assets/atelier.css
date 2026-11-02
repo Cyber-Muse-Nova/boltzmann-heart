@@ -27,3 +27,24 @@ body.atelier{position:relative;isolation:isolate;background:radial-gradient(elli
 @media(max-width:760px){.atelier-hero h1{font-size:clamp(80px,19vw,130px)}.feature,.u-card,.duality,#galaxy{backdrop-filter:blur(18px) saturate(130%);-webkit-backdrop-filter:blur(18px) saturate(130%)}.duality .light-world{border-right:0}.cosmic-finale{height:490px}.gravity-caption{font-size:8px;letter-spacing:.22em}.hero-art{opacity:.72}.u-card h3{font-size:19px}.atelier-footer{padding-bottom:20px}}
 @media(prefers-contrast:more){.feature,.u-card,.duality{background:rgba(30,16,48,.94)}.u-desc,.feature-content p{color:#e6d3ee}}
 .atelier-hero{overflow:clip}
+
+/* Crystal atmosphere: viewport-bound gravity, luminous glass, feathered artwork. */
+.sky-canopy{z-index:-3}
+.cosmic-finale{position:fixed;inset:auto 0 0;height:min(60svh,560px);margin:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 50% 110%,#bc69ef26,transparent 70%)}
+.gravity-caption{display:none}
+.atelier-hero h1,.editorial-head h2,.u-h2,.feature h3,.duality h3,.u-card h3,.footer-name,.universe-page .u-title,.archive-quote{filter:drop-shadow(0 0 2px #ffe4ff99) drop-shadow(0 0 11px #d98afc88) drop-shadow(0 0 28px #bf6fea55)}
+.atelier-hero h1 em,.footer-name em,.universe-page .u-title em{filter:none}
+.hero-poem{ text-shadow:0 0 5px #f9d2ff77,0 0 20px #d286ef88}
+.feature,.u-card,.duality,.u-tip,#galaxy{background:linear-gradient(125deg,rgba(85,49,110,.27),rgba(24,18,47,.32));border-color:rgba(255,211,246,.58);backdrop-filter:blur(20px) saturate(155%);-webkit-backdrop-filter:blur(20px) saturate(155%);box-shadow:inset 0 0 1px #fff,inset 0 0 24px #e9b6ff0d,0 0 3px #f2c4ff77,0 0 22px #ca8aee33,0 16px 40px #03010f22}
+.feature:hover,.u-card:hover{background:linear-gradient(125deg,#74478355,#291a4e66);border-color:#ffe2ffbb;box-shadow:inset 0 0 2px #fff9,0 0 8px #efb8ff66,0 0 32px #b576ef55}
+.feature-content,.u-body{background:transparent}
+.light-world{background:radial-gradient(ellipse at 95% 20%,#b766bf22,transparent 75%)}
+.dark-world{background:radial-gradient(ellipse at 90% 100%,#cb466a22,transparent 75%),#1f0d221a}
+.constant-art{background:radial-gradient(ellipse at 68% 28%,#714b7e33,transparent 60%),#0e091a33}
+.u-cover{background:#0a06171a}.u-nav{background:rgba(16,9,31,.46)}
+.hero-art img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 25%,#000 82%,transparent 100%),linear-gradient(to bottom,transparent 0%,#000 16%,#000 55%,rgba(0,0,0,.6) 72%,transparent 98%);mask-image:linear-gradient(to right,transparent 0%,#000 25%,#000 82%,transparent 100%),linear-gradient(to bottom,transparent 0%,#000 16%,#000 55%,rgba(0,0,0,.6) 72%,transparent 98%);-webkit-mask-composite:source-in;mask-composite:intersect}
+@media(max-width:760px){.cosmic-finale{height:min(48svh,390px)}.feature,.u-card,.duality,#galaxy{backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%)}}
+@media(prefers-contrast:more){.feature,.u-card,.duality,.u-tip,#galaxy{background:rgba(30,16,48,.94)}}
+
+#gravity-horizon{position:fixed;bottom:0;left:0;width:100%;height:125px;z-index:4;pointer-events:none;mask-image:linear-gradient(transparent,#000 25%);-webkit-mask-image:linear-gradient(transparent,#000 25%)}
+@media(max-width:760px){#gravity-horizon{height:85px}}
