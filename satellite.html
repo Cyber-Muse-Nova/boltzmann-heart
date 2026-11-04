@@ -43,6 +43,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
   <div id="subtitle">Nine Ways a Satellite Meets Its Fate</div>
 </div>
 
+<script src="assets/crystal-planet.js"></script>
 <script>
 (function() {
 "use strict";
@@ -177,74 +178,8 @@ function drawGlow(x, y, r, color, intensity) {
 }
 
 function drawPlanet(x, y, r, color, glow, type) {
-  drawGlow(x, y, r, glow);
-  var grad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
-  grad.addColorStop(0, "#FFFFFF40"); grad.addColorStop(0.4, color); grad.addColorStop(1, glow);
-  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = grad; ctx.fill();
-
-  // Planet-specific subtle details
-  if (type === "mercury") {
-    // Faint crater impressions
-    ctx.save(); ctx.globalAlpha = 0.12;
-    var craters = [[0.25, -0.3, 0.18], [-0.35, 0.15, 0.14], [0.1, 0.35, 0.1], [-0.15, -0.1, 0.22], [0.4, 0.1, 0.09]];
-    for (var i = 0; i < craters.length; i++) {
-      var cr = craters[i], ccx = x + cr[0] * r, ccy = y + cr[1] * r, ccr = cr[2] * r;
-      var cg = ctx.createRadialGradient(ccx, ccy, ccr * 0.3, ccx, ccy, ccr);
-      cg.addColorStop(0, "rgba(60,60,70,0.6)"); cg.addColorStop(0.7, "rgba(90,90,100,0.3)"); cg.addColorStop(1, "transparent");
-      ctx.beginPath(); ctx.arc(ccx, ccy, ccr, 0, Math.PI * 2); ctx.fillStyle = cg; ctx.fill();
-    }
-    ctx.restore();
-  } else if (type === "venus") {
-    // Soft cloud haze swirls
-    ctx.save(); ctx.globalAlpha = 0.1;
-    var t = S.time * 0.003;
-    for (var i = 0; i < 3; i++) {
-      var cy2 = y + (i - 1) * r * 0.35, sw = r * (0.9 - Math.abs(i - 1) * 0.15);
-      ctx.beginPath(); ctx.ellipse(x + Math.sin(t + i) * r * 0.08, cy2, sw, r * 0.12, t * 0.5 + i, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,230,180,0.5)"; ctx.fill();
-    }
-    ctx.restore();
-  } else if (type === "mars") {
-    // Red dust haze at edges
-    ctx.save();
-    var dg = ctx.createRadialGradient(x, y + r * 0.2, r * 0.3, x, y, r * 1.25);
-    dg.addColorStop(0, "transparent"); dg.addColorStop(0.7, "rgba(180,80,40,0.06)"); dg.addColorStop(1, "rgba(200,100,50,0.12)");
-    ctx.beginPath(); ctx.arc(x, y, r * 1.25, 0, Math.PI * 2); ctx.fillStyle = dg; ctx.fill();
-    // Faint surface marks
-    ctx.globalAlpha = 0.08;
-    ctx.beginPath(); ctx.ellipse(x - r * 0.2, y + r * 0.1, r * 0.35, r * 0.12, -0.3, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(120,40,20,0.6)"; ctx.fill();
-    ctx.restore();
-  } else if (type === "jupiter") {
-    // Subtle horizontal bands
-    ctx.save(); ctx.globalCompositeOperation = "overlay";
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.clip();
-    var bands = [-0.6, -0.35, -0.1, 0.15, 0.4, 0.65];
-    for (var i = 0; i < bands.length; i++) {
-      var by = y + bands[i] * r, bh = r * 0.14;
-      ctx.fillStyle = i % 2 === 0 ? "rgba(180,130,80,0.1)" : "rgba(140,100,60,0.08)";
-      ctx.fillRect(x - r, by - bh / 2, r * 2, bh);
-    }
-    ctx.restore();
-  } else if (type === "uranus") {
-    // Icy smooth overlay - pale, cold, empty
-    ctx.save();
-    var ig = ctx.createRadialGradient(x + r * 0.15, y - r * 0.15, r * 0.1, x, y, r);
-    ig.addColorStop(0, "rgba(200,240,240,0.12)"); ig.addColorStop(0.6, "rgba(150,220,215,0.05)"); ig.addColorStop(1, "transparent");
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = ig; ctx.fill();
-    ctx.restore();
-  } else if (type === "neptune") {
-    // Deeper blue atmosphere, cold abyss feel
-    ctx.save();
-    var ng = ctx.createRadialGradient(x, y, r * 0.2, x, y, r * 1.15);
-    ng.addColorStop(0, "rgba(20,30,100,0.1)"); ng.addColorStop(0.6, "rgba(15,20,80,0.12)"); ng.addColorStop(1, "rgba(30,50,130,0.08)");
-    ctx.beginPath(); ctx.arc(x, y, r * 1.15, 0, Math.PI * 2); ctx.fillStyle = ng; ctx.fill();
-    // Faint atmospheric streak
-    ctx.globalAlpha = 0.07;
-    ctx.beginPath(); ctx.ellipse(x + r * 0.1, y - r * 0.15, r * 0.4, r * 0.08, 0.2, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(100,150,255,0.6)"; ctx.fill();
-    ctx.restore();
-  }
+  // 半透明发光水晶星球（assets/crystal-planet.js）；每颗行星保留自己的配色特征
+  CrystalPlanet.draw(ctx, x, y, r, type || "earth", performance.now());
 }
 
 function drawSat(x, y, r, color, glowing) {
@@ -335,7 +270,7 @@ function animate(){
       if(S.phaseTime>150){S.phase=0;S.time=0;S.trail=[];S.particles=[];}
     }
   }else if(sceneIdx===2){
-    drawPlanet(cx,cy,pr,sc.color,sc.glow);
+    drawPlanet(cx,cy,pr,sc.color,sc.glow,"earth");
     var mR=80*dpr,mA=S.time*0.015;
     var mp=gp(0,cx+Math.cos(mA)*mR,cy+Math.sin(mA)*mR*0.5);
     drawSat(mp.x,mp.y,5*dpr,"#D0D0D0",D.active&&D.target===0);sats.push(mp);
@@ -378,14 +313,8 @@ function animate(){
   }else if(sceneIdx===5){
     var rP=S.particles.filter(function(p){return p.isRing;});
     rP.forEach(function(p){if(p.y<cy){ctx.beginPath();ctx.arc(p.x,p.y,p.size*dpr*0.8,0,Math.PI*2);ctx.fillStyle="rgba(224,200,138,"+(p.life/p.maxLife*0.8)+")";ctx.fill();}});
-    drawPlanet(cx,cy,pr,sc.color,sc.glow);
-    // Enhanced rings with multiple layers and gradient
+    drawPlanet(cx,cy,pr,sc.color,sc.glow,"saturn");
     ctx.save();
-    for(var ri=0;ri<3;ri++){
-      var rw=pr*(1.7+ri*0.25),rh=pr*(0.42+ri*0.06),ra=0.2-ri*0.05;
-      ctx.beginPath();ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2);
-      ctx.strokeStyle="rgba(210,190,150,"+ra+")";ctx.lineWidth=(7-ri*1.5)*dpr;ctx.stroke();
-    }
     // Ring shimmer particles
     if(S.time%4===0){var rsa=Math.random()*Math.PI*2,rsr=pr*(1.7+Math.random()*0.6);
       addP(cx+Math.cos(rsa)*rsr,cy+Math.sin(rsa)*rsr*0.25,(Math.random()-0.5)*0.3*dpr,(Math.random()-0.5)*0.1*dpr,"rgba(224,200,138,1)",60,0.8);}
