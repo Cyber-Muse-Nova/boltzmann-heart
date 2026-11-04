@@ -112,26 +112,25 @@
     });
     // home star
     if (homeBody){
-      homeBody.x = g.cx; homeBody.y = g.cy; homeBody.r = g.mobile ? 13 : 17;
-      var hg = ctx.createRadialGradient(g.cx - 4, g.cy - 5, 1, g.cx, g.cy, homeBody.r);
-      hg.addColorStop(0, "#ffffff"); hg.addColorStop(.35, "#b9c6ff"); hg.addColorStop(1, "#002FA7");
-      ctx.shadowColor = "rgba(90,120,255,.7)"; ctx.shadowBlur = 30;
-      ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(g.cx, g.cy, homeBody.r, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+      homeBody.x = g.cx; homeBody.y = g.cy; homeBody.r = g.mobile ? 16 : 22;
+      if (window.CrystalPlanet) CrystalPlanet.draw(ctx, g.cx, g.cy, homeBody.r, "home", performance.now());
     }
     // planets: sort by depth so far ones draw first
     bodies.forEach(function(b){
       var R = g.r0 + g.step * b.ringRef.ring, a = b.a + t * b.ringRef.speed;
       b.x = g.cx + Math.cos(a) * R; b.y = g.cy + Math.sin(a) * R * g.tilt;
-      b.depth = Math.sin(a); b.r = (g.mobile ? 6 : 7.5) * (0.82 + 0.28 * (b.depth + 1) / 2) + (b.p.status === "已上线" ? 1.5 : 0);
+      b.depth = Math.sin(a); b.r = (g.mobile ? 7 : 9) * (0.82 + 0.28 * (b.depth + 1) / 2) + (b.p.status === "已上线" ? 1.5 : 0);
     });
     bodies.slice().sort(function(a,b){ return a.depth - b.depth; }).forEach(function(b){
       var col = COLORS[b.p.category], on = hover === b, dev = b.p.status !== "已上线";
       if (on){ ctx.strokeStyle = "rgba(255,255,255,.7)"; ctx.beginPath(); ctx.arc(b.x, b.y, b.r + 7, 0, 6.283); ctx.stroke(); }
-      var pg = ctx.createRadialGradient(b.x - b.r * .4, b.y - b.r * .4, .5, b.x, b.y, b.r);
-      pg.addColorStop(0, "#ffffff"); pg.addColorStop(.3, col); pg.addColorStop(1, "rgba(3,2,8,1)");
-      ctx.globalAlpha = 0.55 + 0.45 * (b.depth + 1) / 2;
-      ctx.fillStyle = dev ? "rgba(3,2,8,1)" : pg; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 6.283); ctx.fill();
-      if (dev){ ctx.setLineDash([2,3]); ctx.strokeStyle = col; ctx.stroke(); ctx.setLineDash([]); }
+      var depthA = 0.6 + 0.4 * (b.depth + 1) / 2;
+      if (window.CrystalPlanet){
+        if (!b.look){ var sd = 0; for (var q = 0; q < b.p.id.length; q++) sd = (sd * 31 + b.p.id.charCodeAt(q)) >>> 0; b.look = CrystalPlanet.fromColor(col, sd % 997 + 1); }
+        b.look.alpha = (dev ? 0.42 : 1) * depthA;
+        CrystalPlanet.draw(ctx, b.x, b.y, b.r, b.look, performance.now());
+      }
+      if (dev){ ctx.globalAlpha = depthA; ctx.setLineDash([2,3]); ctx.strokeStyle = col; ctx.beginPath(); ctx.arc(b.x, b.y, b.r + 2.5, 0, 6.283); ctx.stroke(); ctx.setLineDash([]); }
       ctx.globalAlpha = 1;
       if (!g.mobile && (on || W > 1100)){
         ctx.fillStyle = on ? "#fff" : "rgba(236,228,255,.55)"; ctx.font = (on ? "500 " : "400 ") + "11px Inter, 'Noto Sans SC', sans-serif";
