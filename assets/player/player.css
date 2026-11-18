@@ -1,0 +1,380 @@
+/* Nova Crystal — floating music player
+ * Faithful port of the Of Course I Still Love You cyberpunk player
+ * (https://github.com/Cyber-Muse-Nova/Of-Course-I-Still-Love-You).
+ * Namespaced as .nova-mp* so it can sit on every portfolio page.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Rajdhani:wght@300;400;500;600&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@300;400;500;600&display=swap");
+
+.nova-mp,
+.nova-mp *,
+.nova-mp *::before,
+.nova-mp *::after {
+  box-sizing: border-box;
+}
+.nova-mp button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+/* ═══ CYBERPUNK MUSIC PLAYER ═══ */
+.nova-mp {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  right: 24px;
+  width: 400px;
+  height: auto;
+  min-height: 140px;
+  z-index: 90;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  background:
+    linear-gradient(135deg, rgba(255,112,184,0.14) 0%, rgba(192,96,255,0.08) 40%, rgba(96,208,255,0.12) 100%),
+    rgba(10,5,21,0.72);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(192,96,255,0.32);
+  box-shadow:
+    0 24px 70px rgba(10,5,21,0.6),
+    0 0 48px rgba(192,96,255,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: transform 0.45s cubic-bezier(.2,.9,.2,1), box-shadow 0.45s, opacity 0.6s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.nova-mp.nova-mp-ready {
+  opacity: 1;
+  transform: translateY(0);
+}
+.nova-mp:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 30px 90px rgba(10,5,21,0.7),
+    0 0 70px rgba(255,112,184,0.26),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.nova-mp.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+.nova-mp.is-dragging:hover {
+  transform: none;
+}
+.nova-mp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 3;
+}
+.nova-mp::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(130deg, rgba(255,112,184,0.55), rgba(192,96,255,0.1) 30%, rgba(96,208,255,0.55) 70%, rgba(255,112,184,0.2));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.75;
+  z-index: 4;
+}
+.nova-mp-viz {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.nova-mp-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 14px 18px 14px 16px;
+  /* Info gets the full top row so long titles are never squeezed by the controls */
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 8px 14px;
+}
+.nova-mp-cover { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+.nova-mp-info { grid-column: 2 / 4; grid-row: 1; padding-right: 22px; }
+.nova-mp-controls { grid-column: 2; grid-row: 2; }
+.nova-mp-time { grid-column: 3; grid-row: 2; align-self: center !important; padding-top: 0 !important; }
+.nova-mp-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.nova-mp-nav {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(192,96,255,0.32);
+  background: rgba(255,255,255,0.04);
+  color: rgba(248,240,255,0.82);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.2s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.nova-mp-nav svg { width: 15px; height: 15px; fill: currentColor; }
+.nova-mp-nav:hover {
+  transform: scale(1.08);
+  color: #fff;
+  border-color: rgba(255,112,184,0.6);
+  background: rgba(255,112,184,0.14);
+  box-shadow: 0 0 18px rgba(255,112,184,0.35), inset 0 0 8px rgba(192,96,255,0.25);
+}
+.nova-mp-nav:active { transform: scale(0.92); }
+.nova-mp-mode svg { display: none; }
+.nova-mp-mode[data-mode="sequential"] .nova-mp-mode-seq,
+.nova-mp-mode[data-mode="repeat-one"] .nova-mp-mode-one,
+.nova-mp-mode[data-mode="shuffle"] .nova-mp-mode-shuffle { display: block; }
+.nova-mp-toggle {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.28);
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255,255,255,0.22), transparent 55%),
+    linear-gradient(135deg, #FF70B8 0%, #C060FF 55%, #60D0FF 100%);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow:
+    0 6px 26px rgba(255,112,184,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.36);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.nova-mp-toggle:hover {
+  transform: scale(1.06);
+  box-shadow:
+    0 10px 36px rgba(255,112,184,0.55),
+    0 0 22px rgba(192,96,255,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.nova-mp-toggle:active { transform: scale(0.95); }
+.nova-mp-toggle svg { width: 20px; height: 20px; fill: #fff; filter: drop-shadow(0 1px 2px rgba(10,5,21,0.4)); }
+.nova-mp-toggle .nova-mp-icon-pause { display: none; }
+.nova-mp.is-playing .nova-mp-toggle .nova-mp-icon-play { display: none; }
+.nova-mp.is-playing .nova-mp-toggle .nova-mp-icon-pause { display: block; }
+.nova-mp.is-playing .nova-mp-toggle {
+  animation: nova-mp-pulse 2.6s ease-in-out infinite;
+}
+@keyframes nova-mp-pulse {
+  0%, 100% {
+    box-shadow: 0 6px 26px rgba(255,112,184,0.38), inset 0 1px 0 rgba(255,255,255,0.36);
+  }
+  50% {
+    box-shadow: 0 12px 40px rgba(192,96,255,0.6), 0 0 32px rgba(96,208,255,0.42), inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+}
+.nova-mp-cover { width: 48px; height: 64px; object-fit: contain; flex-shrink: 0;
+  border-radius: 9px; background: rgba(8,4,18,.65);
+  border: 1px solid rgba(192,96,255,.3); box-shadow: 0 0 16px rgba(192,96,255,.16); }
+.nova-mp-info {
+  min-width: 0;
+}
+.nova-mp-label {
+  font-family: "Rajdhani", sans-serif;
+  font-size: 9px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: rgba(96,208,255,0.92);
+  margin-bottom: 4px;
+  text-shadow: 0 0 12px rgba(96,208,255,0.6);
+}
+.nova-mp-title {
+  font-family: "ZCOOL XiaoWei", "Cormorant Garamond", "Noto Serif SC", serif;
+  font-size: 22px;
+  line-height: 1.1;
+  background: linear-gradient(110deg, #FFD0A0 0%, #FF70B8 35%, #C060FF 68%, #60D0FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 3px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  letter-spacing: 0.04em;
+  padding-bottom: 1px;
+}
+.nova-mp-subtitle {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(248,240,255,0.62);
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.nova-mp-time {
+  font-family: "Rajdhani", sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: rgba(255,208,160,0.78);
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding-top: 4px;
+  text-shadow: 0 0 10px rgba(255,208,160,0.4);
+}
+/* ── Close button (X) ── */
+.nova-mp-close {
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(192,96,255,0.32);
+  background: rgba(255,255,255,0.05);
+  color: rgba(248,240,255,0.78);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 5;
+  transition: transform 0.4s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.nova-mp-close svg { width: 11px; height: 11px; fill: currentColor; }
+.nova-mp-close:hover {
+  color: #fff;
+  background: rgba(255,112,184,0.2);
+  border-color: rgba(255,112,184,0.65);
+  box-shadow: 0 0 16px rgba(255,112,184,0.45), inset 0 0 6px rgba(192,96,255,0.4);
+  transform: rotate(90deg);
+}
+.nova-mp-close:active { transform: rotate(90deg) scale(0.92); }
+
+/* ── Orb icon (only visible when collapsed) ── */
+.nova-mp-orb-icon {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+}
+.nova-mp-orb-icon svg {
+  width: 26px;
+  height: 26px;
+  fill: rgba(255,255,255,0.92);
+  filter: drop-shadow(0 0 10px rgba(255,112,184,0.7)) drop-shadow(0 0 4px rgba(192,96,255,0.5));
+}
+
+/* ── Collapsed crystal orb state ── */
+.nova-mp {
+  transition:
+    width 0.55s cubic-bezier(.4,.0,.2,1),
+    height 0.55s cubic-bezier(.4,.0,.2,1),
+    border-radius 0.55s cubic-bezier(.4,.0,.2,1),
+    transform 0.45s cubic-bezier(.2,.9,.2,1),
+    box-shadow 0.45s,
+    opacity 0.6s;
+}
+.nova-mp.is-collapsed {
+  width: 76px;
+  height: 76px;
+  min-height: 76px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 32%, rgba(255,255,255,0.34) 0%, transparent 38%),
+    radial-gradient(circle at 50% 55%, rgba(255,112,184,0.42) 0%, rgba(192,96,255,0.32) 38%, rgba(96,208,255,0.18) 70%, rgba(10,5,21,0.18) 100%);
+  border-color: rgba(255,255,255,0.34);
+  box-shadow:
+    0 12px 40px rgba(192,96,255,0.45),
+    0 0 32px rgba(255,112,184,0.4),
+    inset 0 0 24px rgba(255,255,255,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+  animation: nova-mp-orb-breathe 3.4s ease-in-out infinite;
+}
+.nova-mp.is-collapsed::after {
+  border-radius: 50%;
+}
+.nova-mp.is-collapsed::before {
+  display: none;
+}
+.nova-mp.is-collapsed .nova-mp-content,
+.nova-mp.is-collapsed .nova-mp-close {
+  display: none;
+}
+.nova-mp.is-collapsed .nova-mp-orb-icon {
+  display: flex;
+}
+.nova-mp.is-collapsed .nova-mp-viz {
+  opacity: 0.85;
+}
+.nova-mp.is-collapsed:hover {
+  transform: scale(1.06);
+  box-shadow:
+    0 16px 50px rgba(192,96,255,0.6),
+    0 0 44px rgba(255,112,184,0.55),
+    inset 0 0 28px rgba(255,255,255,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+@keyframes nova-mp-orb-breathe {
+  0%, 100% {
+    box-shadow:
+      0 12px 40px rgba(192,96,255,0.45),
+      0 0 32px rgba(255,112,184,0.4),
+      inset 0 0 24px rgba(255,255,255,0.22),
+      inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+  50% {
+    box-shadow:
+      0 18px 56px rgba(192,96,255,0.6),
+      0 0 50px rgba(96,208,255,0.45),
+      inset 0 0 32px rgba(255,255,255,0.32),
+      inset 0 1px 0 rgba(255,255,255,0.65);
+  }
+}
+
+@media (max-width: 720px) {
+  .nova-mp {
+    width: calc(100% - 28px);
+    right: 14px;
+    left: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    height: auto;
+    min-height: 116px;
+  }
+  .nova-mp-title { font-size: 18px; line-height: 1.12; }
+  .nova-mp-content { display: grid; grid-template-columns: 44px minmax(0,1fr) auto;
+    grid-template-rows: auto auto; gap: 4px 10px; padding: 10px 18px 10px 12px; }
+  .nova-mp-cover { grid-column: 1; grid-row: 1 / 3; width: 44px; height: 66px; }
+  .nova-mp-info { grid-column: 2 / 4; grid-row: 1; padding-right: 22px; }
+  .nova-mp-controls { grid-column: 2; grid-row: 2; gap: 10px; }
+  .nova-mp-time { grid-column: 3; grid-row: 2; }
+  .nova-mp-toggle { width: 32px; height: 32px; }
+  .nova-mp-nav { width: 28px; height: 28px; }
+  .nova-mp-subtitle { font-size: 11px; }
+  .nova-mp-label { letter-spacing: 2px; }
+
+}

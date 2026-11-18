@@ -25,6 +25,7 @@
     body.is-fullscreen .wrap{width:100%; padding:0}body.is-fullscreen .topbar, body.is-fullscreen .hero, body.is-fullscreen .filters, body.is-fullscreen .sidebar, body.is-fullscreen .footer{display:none}body.is-fullscreen .shell{display:block; margin:0}body.is-fullscreen .viewer{border:none; border-radius:0; box-shadow:none; background:#06030f}body.is-fullscreen .viewer-head{display:none}body.is-fullscreen .canvas-wrap{height:100vh; border-radius:0}
     @media (max-width: 980px){ .shell{grid-template-columns:1fr} .thumbs{grid-template-columns:1fr 1fr} }@media (max-width: 640px){ .wrap{width:min(1240px, calc(100% - 22px))} .brand{display:none} .viewer-head{padding:20px 18px 16px} .sidebar{padding:12px} .thumbs{grid-template-columns:1fr} .canvas-wrap{height:clamp(320px, 68vw, 520px)} }
   </style>
+<link rel="stylesheet" href="../assets/player/player.css?v=ocisly-player">
 </head>
 <body>
   <canvas id="sky" aria-hidden="true"></canvas>
@@ -100,5 +101,6 @@
     function init(){starfield(); renderFilters(); renderThumbs(); resizeCanvas(); updateViewerInfo(); bindCanvasPointer(); requestAnimationFrame(drawFrame); window.addEventListener('resize',()=>{resizeCanvas(); activeState={};}); els.prevBtn.addEventListener('click',()=>cycle(-1)); els.nextBtn.addEventListener('click',()=>cycle(1)); els.fsBtn.addEventListener('click',toggleFullscreen); document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')cycle(-1); if(e.key==='ArrowRight')cycle(1); if(e.key.toLowerCase()==='f')toggleFullscreen(); if(e.key==='Escape'&&document.body.classList.contains('is-fullscreen'))toggleFullscreen();});}
     init();
   </script>
+<script src="../assets/player/player.js?v=ocisly-player" defer></script>
 </body>
 </html>
